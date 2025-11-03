@@ -1,21 +1,20 @@
-using System.Reactive;
-using Reactive.Bindings;
+using R3;
 
 namespace HelloAvaloniaNXUI.Views;
 
-public sealed record ClockState(IObservable<DateTime> CurrentTime);
+public sealed record ClockState(Observable<DateTime> CurrentTime);
 
 public static class ClockHooks
 {
-    private static readonly IObservable<DateTime> _timeObservable =
-        Observable.Interval(TimeSpan.FromSeconds(1))
+    private static readonly Observable<DateTime> _timeObservable =
+        R3.Observable.Interval(TimeSpan.FromSeconds(1))
             .Select(_ => DateTime.Now)
             .Publish()
             .RefCount();
 
-    public static ClockState UseClock(CompositeDisposable disposables)
+    public static ClockState UseClock(R3.CompositeDisposable disposables)
     {
-        var currentTime = new ReactivePropertySlim<DateTime>(DateTime.Now).AddTo(disposables);
+        var currentTime = new ReactiveProperty<DateTime>(DateTime.Now).AddTo(disposables);
 
         _timeObservable.Subscribe(t => currentTime.Value = t).AddTo(disposables);
 
@@ -27,12 +26,12 @@ public static class ClockView
 {
     public static Control Build()
     {
-        var disposables = new CompositeDisposable();
+        var disposables = new R3.CompositeDisposable();
 
         var clockState = ClockHooks.UseClock(disposables);
 
         return new TextBlock()
-            .Text(clockState.CurrentTime.Select(t => t.ToString("HH:mm:ss")))
+            .Text(clockState.CurrentTime.Select(t => t.ToString("HH:mm:ss")).AsSystemObservable())
             .FontSize(56)
             .Margin(10)
             .HorizontalAlignment(HorizontalAlignment.Center)

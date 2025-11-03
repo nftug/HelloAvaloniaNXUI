@@ -1,11 +1,10 @@
-using System.Reactive;
-using Reactive.Bindings;
+using R3;
 
 namespace HelloAvaloniaNXUI.Views;
 
 public record CounterState(
-    ReadOnlyReactivePropertySlim<int> Count,
-    ReadOnlyReactivePropertySlim<bool> IsSetting,
+    ReadOnlyReactiveProperty<int> Count,
+    ReadOnlyReactiveProperty<bool> IsSetting,
     Func<int, TimeSpan, Task> SetCountAsync
 );
 
@@ -17,10 +16,10 @@ public static class CounterHooks
         return newCount;
     }
 
-    public static CounterState UseDelayedCounter(CompositeDisposable disposables)
+    public static CounterState UseDelayedCounter(R3.CompositeDisposable disposables)
     {
-        var count = new ReactivePropertySlim<int>(0).AddTo(disposables);
-        var isSetting = new ReactivePropertySlim<bool>(false).AddTo(disposables);
+        var count = new ReactiveProperty<int>(0).AddTo(disposables);
+        var isSetting = new ReactiveProperty<bool>(false).AddTo(disposables);
 
         async Task SetCountAsync(int newCount, TimeSpan delay)
         {
@@ -30,10 +29,6 @@ public static class CounterHooks
             isSetting.Value = false;
         }
 
-        return new CounterState(
-            count.ToReadOnlyReactivePropertySlim(),
-            isSetting.ToReadOnlyReactivePropertySlim(),
-            SetCountAsync
-        );
+        return new CounterState(count, isSetting, SetCountAsync);
     }
 }

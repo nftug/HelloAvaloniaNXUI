@@ -1,11 +1,10 @@
-using System.Reactive;
-using Reactive.Bindings;
+using R3;
 
 namespace HelloAvaloniaNXUI.Views;
 
 public record CounterActionButtonViewProps(
-    ReadOnlyReactivePropertySlim<int> Count,
-    ReadOnlyReactivePropertySlim<bool> IsSetting,
+    ReadOnlyReactiveProperty<int> Count,
+    ReadOnlyReactiveProperty<bool> IsSetting,
     Func<int, TimeSpan, Task> SetCountAsync
 );
 
@@ -13,33 +12,33 @@ public static class CounterActionButtonView
 {
     public static Control Build(CounterActionButtonViewProps props)
     {
-        var disposables = new CompositeDisposable();
+        var disposables = new R3.CompositeDisposable();
 
-        var canIncrement = props.IsSetting.Select(v => !v).ToReadOnlyReactivePropertySlim().AddTo(disposables);
+        var canIncrement = props.IsSetting.Select(v => !v).ToReadOnlyReactiveProperty().AddTo(disposables);
         var canDecrement = props.IsSetting
             .CombineLatest(props.Count, (isSetting, count) => !isSetting && count > 0)
-            .ToReadOnlyReactivePropertySlim()
+            .ToReadOnlyReactiveProperty()
             .AddTo(disposables);
         var canReset = props.IsSetting
             .CombineLatest(props.Count, (isSetting, count) => !isSetting && count != 0)
-            .ToReadOnlyReactivePropertySlim()
+            .ToReadOnlyReactiveProperty()
             .AddTo(disposables);
 
         async void HandleIncrement(Control _)
         {
-            if (!canIncrement.Value) return;
-            await props.SetCountAsync(props.Count.Value + 1, TimeSpan.FromSeconds(0.1));
+            if (!canIncrement.CurrentValue) return;
+            await props.SetCountAsync(props.Count.CurrentValue + 1, TimeSpan.FromSeconds(0.1));
         }
 
         async void HandleDecrement(Control _)
         {
-            if (!canDecrement.Value) return;
-            await props.SetCountAsync(props.Count.Value - 1, TimeSpan.FromSeconds(0.1));
+            if (!canDecrement.CurrentValue) return;
+            await props.SetCountAsync(props.Count.CurrentValue - 1, TimeSpan.FromSeconds(0.1));
         }
 
         async void HandleReset(Control _)
         {
-            if (!canReset.Value) return;
+            if (!canReset.CurrentValue) return;
             await props.SetCountAsync(0, TimeSpan.FromSeconds(0.5));
         }
 
@@ -51,21 +50,21 @@ public static class CounterActionButtonView
                 Button()
                     .Content("Increment")
                     .OnClick(ControlEvent.Use<Button>(HandleIncrement, disposables))
-                    .IsEnabled(canIncrement)
+                    .IsEnabled(canIncrement.AsSystemObservable())
                     .Margin(new Thickness(5.0, 0.0))
                     .HorizontalAlignment(HorizontalAlignment.Stretch)
                     .Column(0),
                 Button()
                     .Content("Decrement")
                     .OnClick(ControlEvent.Use<Button>(HandleDecrement, disposables))
-                    .IsEnabled(canDecrement)
+                    .IsEnabled(canDecrement.AsSystemObservable())
                     .Margin(new Thickness(5.0, 0.0))
                     .HorizontalAlignment(HorizontalAlignment.Stretch)
                     .Column(1),
                 Button()
                     .Content("Reset")
                     .OnClick(ControlEvent.Use<Button>(HandleReset, disposables))
-                    .IsEnabled(canReset)
+                    .IsEnabled(canReset.AsSystemObservable())
                     .Margin(new Thickness(5.0, 10.0))
                     .HorizontalAlignment(HorizontalAlignment.Stretch)
                     .Column(0)

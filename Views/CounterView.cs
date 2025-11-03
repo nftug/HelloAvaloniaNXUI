@@ -1,10 +1,12 @@
+using R3;
+
 namespace HelloAvaloniaNXUI.Views;
 
 public static class CounterView
 {
     public static Control Build()
     {
-        var disposables = new CompositeDisposable();
+        var disposables = new R3.CompositeDisposable();
 
         var counterState = CounterHooks.UseDelayedCounter(disposables);
 
@@ -15,7 +17,7 @@ public static class CounterView
             .VerticalAlignment(VerticalAlignment.Center)
             .Children(
                 new TextBlock()
-                    .Text(counterState.Count.Select(c => $"Count: {c}"))
+                    .Text(counterState.Count.Select(c => $"Count: {c}").AsSystemObservable())
                     .FontSize(24)
                     .Margin(new Thickness(0, 0, 0, 20))
                     .HorizontalAlignment(HorizontalAlignment.Center),

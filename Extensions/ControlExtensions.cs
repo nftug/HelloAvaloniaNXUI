@@ -1,4 +1,4 @@
-using System.Reactive;
+using R3;
 
 namespace Avalonia.Controls;
 
@@ -15,7 +15,7 @@ public static class ControlExtensions
 public static class ControlEvent
 {
     public static Action<TControl, IObservable<RoutedEventArgs>> Use<TControl>(
-        Action<TControl> action, CompositeDisposable disposables)
+        Action<TControl> action, R3.CompositeDisposable disposables)
         where TControl : Interactive
     {
         return (control, events) =>
