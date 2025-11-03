@@ -1,6 +1,6 @@
-namespace NXUI;
+namespace HelloAvaloniaNXUI.Utils;
 
-public static class GridDefinitionExtensions
+public static class GridExtensions
 {
     public static T ColumnDefinitions<T>(this T grid, string definitions) where T : Grid
     {

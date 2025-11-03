@@ -21,10 +21,16 @@ public static class CounterHooks
 
         async Task SetCountAsync(int newCount, TimeSpan delay)
         {
-            isSetting.Value = true;
-            var delayedCount = await FetchDelayedCountAsync(newCount, delay);
-            count.Value = delayedCount;
-            isSetting.Value = false;
+            try
+            {
+                isSetting.Value = true;
+                var delayedCount = await FetchDelayedCountAsync(newCount, delay);
+                count.Value = delayedCount;
+            }
+            finally
+            {
+                isSetting.Value = false;
+            }
         }
 
         return new CounterState(count, isSetting, SetCountAsync);

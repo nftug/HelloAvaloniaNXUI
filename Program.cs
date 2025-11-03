@@ -1,17 +1,17 @@
 ﻿using Avalonia.Controls.Notifications;
+using DialogHostAvalonia;
 using HelloAvaloniaNXUI;
 using HelloAvaloniaNXUI.Views;
 
-static Window Build()
-{
-    var ctx = new ViewContext();
-    var window = Window()
+static Window Build() =>
+    Window()
         .Title("Hello Avalonia NXUI").Width(800).Height(600)
         .Styles(AppStyles.Build())
+        .Styles(new DialogHostStyles())
         .Content(
             Grid()
                 .Children(
-                    WindowNotificationManager(out var notificationManager)
+                    WindowNotificationManager()
                         .Position(NotificationPosition.BottomCenter)
                         .MaxItems(1),
                     StackPanel()
@@ -20,13 +20,10 @@ static Window Build()
                         .HorizontalAlignment(HorizontalAlignment.Center)
                         .VerticalAlignment(VerticalAlignment.Center)
                         .Children(
-                            ClockView.Build(ctx),
-                            CounterView.Build(ctx)
-                        ))
-                );
-    ctx.Inject(notificationManager);
-    return window;
-}
+                            ClockView.Build(),
+                            CounterView.Build()
+                        ),
+                    new DialogHost()));
 
 AppBuilder.Configure<Application>()
   .UsePlatformDetect()

@@ -4,46 +4,49 @@ namespace HelloAvaloniaNXUI.Views;
 
 public static class CounterActionButtonView
 {
-    public static Control Build(CounterState props, ViewContext ctx)
+    public static Control Build(CounterState props)
     {
         var disposables = new R3.CompositeDisposable();
 
-        var canIncrement = props.IsSetting.Select(v => !v).ToReadOnlyReactiveProperty().AddTo(disposables);
+        var canIncrement = props.IsSetting.Select(v => !v).ToReadOnly(disposables);
 
         var canDecrement = props.IsSetting
             .CombineLatest(props.Count, (isSetting, count) => !isSetting && count > 0)
-            .ToReadOnlyReactiveProperty()
-            .AddTo(disposables);
+            .ToReadOnly(disposables);
 
         var canReset = props.IsSetting
             .CombineLatest(props.Count, (isSetting, count) => !isSetting && count != 0)
-            .ToReadOnlyReactiveProperty()
-            .AddTo(disposables);
+            .ToReadOnly(disposables);
 
-        async void HandleIncrement(Control _)
+        async void HandleIncrement()
         {
             if (!canIncrement.CurrentValue) return;
             await props.SetCountAsync(props.Count.CurrentValue + 1, TimeSpan.FromSeconds(0.1));
         }
 
-        async void HandleDecrement(Control _)
+        async void HandleDecrement()
         {
             if (!canDecrement.CurrentValue) return;
             await props.SetCountAsync(props.Count.CurrentValue - 1, TimeSpan.FromSeconds(0.1));
         }
 
-        async void HandleReset(Control _)
+        async void HandleReset()
         {
             if (!canReset.CurrentValue) return;
+
+            var ans = await ConfirmDialogView.ShowAsync(
+                "Reset Counter",
+                "Are you sure you want to reset the counter to zero?"
+            );
+            if (!ans) return;
+
             await props.SetCountAsync(0, TimeSpan.FromSeconds(0.5));
 
-            ctx.NotificationManager?.Show(
-                new Notification(
-                    "Counter Reset",
-                    "The counter has been reset to zero.",
-                     NotificationType.Information
-                )
-            );
+            ShowNotification(new Notification(
+                "Counter Reset",
+                "The counter has been reset to zero.",
+                NotificationType.Information
+            ));
         }
 
         return Grid()
@@ -53,21 +56,21 @@ public static class CounterActionButtonView
             .Children(
                 Button()
                     .Content("Increment")
-                    .OnClick(BindEvent<Button>(HandleIncrement, disposables))
+                    .OnClickHandler((_, _) => HandleIncrement())
                     .IsEnabled(canIncrement.AsSystemObservable())
                     .Margin(new Thickness(5.0, 0.0))
                     .HorizontalAlignment(HorizontalAlignment.Stretch)
                     .Column(0),
                 Button()
                     .Content("Decrement")
-                    .OnClick(BindEvent<Button>(HandleDecrement, disposables))
+                    .OnClickHandler((_, _) => HandleDecrement())
                     .IsEnabled(canDecrement.AsSystemObservable())
                     .Margin(new Thickness(5.0, 0.0))
                     .HorizontalAlignment(HorizontalAlignment.Stretch)
                     .Column(1),
                 Button()
                     .Content("Reset")
-                    .OnClick(BindEvent<Button>(HandleReset, disposables))
+                    .OnClickHandler((_, _) => HandleReset())
                     .IsEnabled(canReset.AsSystemObservable())
                     .Margin(new Thickness(5.0, 10.0))
                     .HorizontalAlignment(HorizontalAlignment.Stretch)

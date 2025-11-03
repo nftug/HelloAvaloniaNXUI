@@ -1,3 +1,3 @@
-global using HelloAvaloniaNXUI.Contexts;
+global using HelloAvaloniaNXUI.Utils;
 global using R3;
-global using static NXUI.ControlEvent;
+global using static HelloAvaloniaNXUI.Utils.ApplicationUtils;

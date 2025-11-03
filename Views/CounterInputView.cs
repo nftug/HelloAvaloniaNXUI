@@ -2,7 +2,7 @@ namespace HelloAvaloniaNXUI.Views;
 
 public static class CounterInputView
 {
-    public static Control Build(CounterState props, ViewContext _)
+    public static Control Build(CounterState props)
     {
         var disposables = new R3.CompositeDisposable();
         var inputCount = new ReactiveProperty<decimal?>().AddTo(disposables);
@@ -17,10 +17,9 @@ public static class CounterInputView
                 inputCount,
                 (isSetting, current, input) => !isSetting && input != current
             )
-            .ToReadOnlyReactiveProperty()
-            .AddTo(disposables);
+            .ToReadOnly(disposables);
 
-        async void HandleSetInput(Control _)
+        async void HandleSetInput()
         {
             if (!canSetInput.CurrentValue) return;
             if (inputCount.Value is not { } newValue) return;
@@ -35,16 +34,13 @@ public static class CounterInputView
                     .Minimum(0)
                     .Maximum(10000)
                     .FormatString("0")
-                    .OnValueChanged(BindEvent<NumericUpDown>((ctrl) =>
-                    {
-                        if (ctrl.Value is { } newValue) inputCount.Value = newValue;
-                    }, disposables))
+                    .OnValueChangedHandler((_, e) => inputCount.Value = e.NewValue)
                     .IsEnabled(props.IsSetting.Select(v => !v).AsSystemObservable())
                     .Margin(new Thickness(5.0, 0.0))
                     .VerticalAlignment(VerticalAlignment.Center),
                 Button()
                     .Content("Set")
-                    .OnClick(BindEvent<Button>(HandleSetInput, disposables))
+                    .OnClickHandler((_, _) => HandleSetInput())
                     .IsEnabled(canSetInput.AsSystemObservable())
                     .Margin(new Thickness(5.0, 0.0))
                     .Width(80)

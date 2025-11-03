@@ -2,7 +2,7 @@ namespace HelloAvaloniaNXUI.Views;
 
 public static class CounterView
 {
-    public static Control Build(ViewContext ctx)
+    public static Control Build()
     {
         var disposables = new R3.CompositeDisposable();
 
@@ -14,13 +14,13 @@ public static class CounterView
             .HorizontalAlignment(HorizontalAlignment.Center)
             .VerticalAlignment(VerticalAlignment.Center)
             .Children(
-                new TextBlock()
+                TextBlock()
                     .Text(counterState.Count.Select(c => $"Count: {c}").AsSystemObservable())
                     .FontSize(24)
                     .Margin(new Thickness(0, 0, 0, 20))
                     .HorizontalAlignment(HorizontalAlignment.Center),
-                CounterInputView.Build(counterState, ctx),
-                CounterActionButtonView.Build(counterState, ctx)
+                CounterInputView.Build(counterState),
+                CounterActionButtonView.Build(counterState)
             )
             .OnDetached(disposables.Dispose);
     }
