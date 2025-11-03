@@ -1,5 +1,3 @@
-using R3;
-
 namespace HelloAvaloniaNXUI.Views;
 
 public record CounterActionButtonViewProps(
@@ -15,10 +13,12 @@ public static class CounterActionButtonView
         var disposables = new R3.CompositeDisposable();
 
         var canIncrement = props.IsSetting.Select(v => !v).ToReadOnlyReactiveProperty().AddTo(disposables);
+
         var canDecrement = props.IsSetting
             .CombineLatest(props.Count, (isSetting, count) => !isSetting && count > 0)
             .ToReadOnlyReactiveProperty()
             .AddTo(disposables);
+
         var canReset = props.IsSetting
             .CombineLatest(props.Count, (isSetting, count) => !isSetting && count != 0)
             .ToReadOnlyReactiveProperty()
@@ -49,21 +49,21 @@ public static class CounterActionButtonView
             .Children(
                 Button()
                     .Content("Increment")
-                    .OnClick(ControlEvent.Use<Button>(HandleIncrement, disposables))
+                    .OnClick(BindEvent<Button>(HandleIncrement, disposables))
                     .IsEnabled(canIncrement.AsSystemObservable())
                     .Margin(new Thickness(5.0, 0.0))
                     .HorizontalAlignment(HorizontalAlignment.Stretch)
                     .Column(0),
                 Button()
                     .Content("Decrement")
-                    .OnClick(ControlEvent.Use<Button>(HandleDecrement, disposables))
+                    .OnClick(BindEvent<Button>(HandleDecrement, disposables))
                     .IsEnabled(canDecrement.AsSystemObservable())
                     .Margin(new Thickness(5.0, 0.0))
                     .HorizontalAlignment(HorizontalAlignment.Stretch)
                     .Column(1),
                 Button()
                     .Content("Reset")
-                    .OnClick(ControlEvent.Use<Button>(HandleReset, disposables))
+                    .OnClick(BindEvent<Button>(HandleReset, disposables))
                     .IsEnabled(canReset.AsSystemObservable())
                     .Margin(new Thickness(5.0, 10.0))
                     .HorizontalAlignment(HorizontalAlignment.Stretch)

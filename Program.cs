@@ -4,7 +4,7 @@ using HelloAvaloniaNXUI.Views;
 static Window Build()
     => Window()
         .Title("Hello Avalonia NXUI").Width(800).Height(600)
-        .Styles(new AppStyles())
+        .Styles(AppStyles.Build())
         .Content(
             StackPanel()
                 .Margin(20)

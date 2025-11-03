@@ -1,5 +1,3 @@
-using R3;
-
 namespace HelloAvaloniaNXUI.Views;
 
 public sealed record ClockState(Observable<DateTime> CurrentTime);

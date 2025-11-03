@@ -1,6 +1,4 @@
-using R3;
-
-namespace Avalonia.Controls;
+namespace NXUI;
 
 public static class ControlExtensions
 {
@@ -14,7 +12,7 @@ public static class ControlExtensions
 
 public static class ControlEvent
 {
-    public static Action<TControl, IObservable<RoutedEventArgs>> Use<TControl>(
+    public static Action<TControl, IObservable<RoutedEventArgs>> BindEvent<TControl>(
         Action<TControl> action, R3.CompositeDisposable disposables)
         where TControl : Interactive
     {

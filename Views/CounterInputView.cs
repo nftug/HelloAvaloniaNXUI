@@ -1,5 +1,3 @@
-using R3;
-
 namespace HelloAvaloniaNXUI.Views;
 
 public record CounterInputViewProps(
@@ -38,21 +36,21 @@ public static class CounterInputView
         return Grid()
             .ColumnDefinitions("1*, Auto")
             .Children(
-                new NumericUpDown()
+                NumericUpDown()
                     .Value(inputCount.AsSystemObservable())
                     .Minimum(0)
                     .Maximum(10000)
                     .FormatString("0")
-                    .OnValueChanged(ControlEvent.Use<NumericUpDown>((ctrl) =>
+                    .OnValueChanged(BindEvent<NumericUpDown>((ctrl) =>
                     {
                         if (ctrl.Value is { } newValue) inputCount.Value = newValue;
                     }, disposables))
                     .IsEnabled(props.IsSetting.Select(v => !v).AsSystemObservable())
                     .Margin(new Thickness(5.0, 0.0))
                     .VerticalAlignment(VerticalAlignment.Center),
-                new Button()
+                Button()
                     .Content("Set")
-                    .OnClick(ControlEvent.Use<Button>(HandleSetInput, disposables))
+                    .OnClick(BindEvent<Button>(HandleSetInput, disposables))
                     .IsEnabled(canSetInput.AsSystemObservable())
                     .Margin(new Thickness(5.0, 0.0))
                     .Width(80)

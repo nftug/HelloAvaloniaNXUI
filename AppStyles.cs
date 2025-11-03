@@ -1,25 +1,20 @@
 namespace HelloAvaloniaNXUI;
 
-public class AppStyles : Styles
+public static class AppStyles
 {
-    public AppStyles()
+    public static Styles Build()
     {
-        Add(new Style(x => x.OfType<Button>())
-        {
-            Setters =
-            {
-                new Setter(Avalonia.Controls.ContentControl.HorizontalContentAlignmentProperty, HorizontalAlignment.Center),
-                new Setter(Avalonia.Controls.ContentControl.VerticalContentAlignmentProperty, VerticalAlignment.Center),
-            }
-        });
+        var styles = new Styles();
 
-        Add(new Style(x => x.OfType<ToggleButton>())
-        {
-            Setters =
-            {
-                new Setter(Avalonia.Controls.ContentControl.HorizontalContentAlignmentProperty, HorizontalAlignment.Center),
-                new Setter(Avalonia.Controls.ContentControl.VerticalContentAlignmentProperty, VerticalAlignment.Center),
-            }
-        });
+        styles.AddRange([
+            Style(x => x.OfType<Button>())
+                .Setter(Avalonia.Layout.Layoutable.HorizontalAlignmentProperty, HorizontalAlignment.Center)
+                .Setter(Avalonia.Layout.Layoutable.VerticalAlignmentProperty, VerticalAlignment.Center),
+            Style(x => x.OfType<ToggleButton>())
+                .Setter(Avalonia.Layout.Layoutable.HorizontalAlignmentProperty, HorizontalAlignment.Center)
+                .Setter(Avalonia.Layout.Layoutable.VerticalAlignmentProperty, VerticalAlignment.Center)
+        ]);
+
+        return styles;
     }
 }
