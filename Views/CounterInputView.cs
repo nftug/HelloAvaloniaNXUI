@@ -5,7 +5,7 @@ public static class CounterInputView
     public static Control Build(CounterState props)
     {
         var disposables = new R3.CompositeDisposable();
-        var inputCount = new ReactiveProperty<decimal?>().AddTo(disposables);
+        var inputCount = new ReactiveProperty<decimal?>(props.Count.CurrentValue).AddTo(disposables);
 
         props.Count
             .Subscribe(c => inputCount.Value = c)
@@ -31,18 +31,18 @@ public static class CounterInputView
             .Children(
                 NumericUpDown()
                     .Value(inputCount.AsSystemObservable())
+                    .OnValueChangedHandler((_, e) => inputCount.Value = e.NewValue)
                     .Minimum(0)
                     .Maximum(10000)
                     .FormatString("0")
-                    .OnValueChangedHandler((_, e) => inputCount.Value = e.NewValue)
                     .IsEnabled(props.IsSetting.Select(v => !v).AsSystemObservable())
-                    .Margin(new Thickness(5.0, 0.0))
+                    .Margin(5.0, 0.0)
                     .VerticalAlignment(VerticalAlignment.Center),
                 Button()
                     .Content("Set")
                     .OnClickHandler((_, _) => HandleSetInput())
                     .IsEnabled(canSetInput.AsSystemObservable())
-                    .Margin(new Thickness(5.0, 0.0))
+                    .Margin(5.0, 0.0)
                     .Width(80)
                     .Column(1)
             )

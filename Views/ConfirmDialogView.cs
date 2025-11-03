@@ -6,9 +6,8 @@ public record ConfirmDialogProps(string Title, string Message);
 
 public static class ConfirmDialogView
 {
-    public static Control Build(ConfirmDialogProps props, ICommand closeCommand)
-    {
-        return StackPanel()
+    public static Control Build(ConfirmDialogProps props, ICommand closeCommand) =>
+        StackPanel()
             .Margin(20)
             .Spacing(20)
             .MinWidth(300)
@@ -38,7 +37,6 @@ public static class ConfirmDialogView
                             .Width(80)
                     )
             );
-    }
 
     public static async Task<bool> ShowAsync(string title, string message)
     {

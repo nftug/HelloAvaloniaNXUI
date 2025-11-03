@@ -17,7 +17,7 @@ public static class CounterView
                 TextBlock()
                     .Text(counterState.Count.Select(c => $"Count: {c}").AsSystemObservable())
                     .FontSize(24)
-                    .Margin(new Thickness(0, 0, 0, 20))
+                    .Margin(0, 0, 0, 20)
                     .HorizontalAlignment(HorizontalAlignment.Center),
                 CounterInputView.Build(counterState),
                 CounterActionButtonView.Build(counterState)
