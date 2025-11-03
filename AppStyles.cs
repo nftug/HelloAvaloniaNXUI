@@ -8,11 +8,11 @@ public static class AppStyles
 
         styles.AddRange([
             Style(x => x.OfType<Button>())
-                .Setter(Avalonia.Layout.Layoutable.HorizontalAlignmentProperty, HorizontalAlignment.Center)
-                .Setter(Avalonia.Layout.Layoutable.VerticalAlignmentProperty, VerticalAlignment.Center),
+                .Setter(Avalonia.Controls.ContentControl.HorizontalContentAlignmentProperty, HorizontalAlignment.Center)
+                .Setter(Avalonia.Controls.ContentControl.VerticalContentAlignmentProperty, VerticalAlignment.Center),
             Style(x => x.OfType<ToggleButton>())
-                .Setter(Avalonia.Layout.Layoutable.HorizontalAlignmentProperty, HorizontalAlignment.Center)
-                .Setter(Avalonia.Layout.Layoutable.VerticalAlignmentProperty, VerticalAlignment.Center)
+                .Setter(Avalonia.Controls.ContentControl.HorizontalContentAlignmentProperty, HorizontalAlignment.Center)
+                .Setter(Avalonia.Controls.ContentControl.VerticalContentAlignmentProperty, VerticalAlignment.Center)
         ]);
 
         return styles;

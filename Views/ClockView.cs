@@ -22,7 +22,7 @@ public static class ClockHooks
 
 public static class ClockView
 {
-    public static Control Build()
+    public static Control Build(ViewContext _)
     {
         var disposables = new R3.CompositeDisposable();
 

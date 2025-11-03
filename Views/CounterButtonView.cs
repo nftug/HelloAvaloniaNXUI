@@ -1,14 +1,10 @@
-namespace HelloAvaloniaNXUI.Views;
+using Avalonia.Controls.Notifications;
 
-public record CounterActionButtonViewProps(
-    ReadOnlyReactiveProperty<int> Count,
-    ReadOnlyReactiveProperty<bool> IsSetting,
-    Func<int, TimeSpan, Task> SetCountAsync
-);
+namespace HelloAvaloniaNXUI.Views;
 
 public static class CounterActionButtonView
 {
-    public static Control Build(CounterActionButtonViewProps props)
+    public static Control Build(CounterState props, ViewContext ctx)
     {
         var disposables = new R3.CompositeDisposable();
 
@@ -40,6 +36,14 @@ public static class CounterActionButtonView
         {
             if (!canReset.CurrentValue) return;
             await props.SetCountAsync(0, TimeSpan.FromSeconds(0.5));
+
+            ctx.NotificationManager?.Show(
+                new Notification(
+                    "Counter Reset",
+                    "The counter has been reset to zero.",
+                     NotificationType.Information
+                )
+            );
         }
 
         return Grid()

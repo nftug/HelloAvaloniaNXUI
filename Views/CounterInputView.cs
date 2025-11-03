@@ -1,14 +1,8 @@
 namespace HelloAvaloniaNXUI.Views;
 
-public record CounterInputViewProps(
-    ReadOnlyReactiveProperty<int> Count,
-    ReadOnlyReactiveProperty<bool> IsSetting,
-    Func<int, TimeSpan, Task> SetCountAsync
-);
-
 public static class CounterInputView
 {
-    public static Control Build(CounterInputViewProps props)
+    public static Control Build(CounterState props, ViewContext _)
     {
         var disposables = new R3.CompositeDisposable();
         var inputCount = new ReactiveProperty<decimal?>().AddTo(disposables);
@@ -29,8 +23,8 @@ public static class CounterInputView
         async void HandleSetInput(Control _)
         {
             if (!canSetInput.CurrentValue) return;
-            if (inputCount.Value is null) return;
-            await props.SetCountAsync((int)inputCount.Value, TimeSpan.FromSeconds(0.3));
+            if (inputCount.Value is not { } newValue) return;
+            await props.SetCountAsync((int)newValue, TimeSpan.FromSeconds(0.3));
         }
 
         return Grid()
