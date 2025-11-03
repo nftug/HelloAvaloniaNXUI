@@ -10,7 +10,7 @@ public static class CounterView
 
         var counterState = CounterHooks.UseDelayedCounter(disposables);
 
-        return new StackPanel()
+        return StackPanel()
             .Margin(20)
             .Spacing(10)
             .HorizontalAlignment(HorizontalAlignment.Center)

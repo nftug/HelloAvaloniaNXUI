@@ -30,7 +30,7 @@ public static class ClockView
 
         var clockState = ClockHooks.UseClock(disposables);
 
-        return new TextBlock()
+        return TextBlock()
             .Text(clockState.CurrentTime.Select(t => t.ToString("HH:mm:ss")).AsSystemObservable())
             .FontSize(56)
             .Margin(10)
