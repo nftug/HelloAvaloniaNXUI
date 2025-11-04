@@ -17,7 +17,7 @@ public static class CounterInputView
                     inputCount,
                     (isSetting, current, input) => !isSetting && input != current
                 )
-                .ToReadOnly(disposables);
+                .ToReactiveValue(disposables);
 
             async void HandleSetInput() =>
                 await InvokeAsync(disposables,

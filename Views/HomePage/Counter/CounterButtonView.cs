@@ -8,15 +8,15 @@ public static class CounterActionButtonView
     public static Control Build(CounterState props) =>
         WithReactive((disposables) =>
         {
-            var canIncrement = props.IsSetting.Select(v => !v).ToReadOnly(disposables);
+            var canIncrement = props.IsSetting.Select(v => !v).ToReactiveValue(disposables);
 
             var canDecrement = props.IsSetting
                 .CombineLatest(props.Count, (isSetting, count) => !isSetting && count > 0)
-                .ToReadOnly(disposables);
+                .ToReactiveValue(disposables);
 
             var canReset = props.IsSetting
                 .CombineLatest(props.Count, (isSetting, count) => !isSetting && count != 0)
-                .ToReadOnly(disposables);
+                .ToReactiveValue(disposables);
 
             async void HandleIncrement() =>
                 await InvokeAsync(disposables,

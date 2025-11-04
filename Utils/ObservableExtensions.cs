@@ -2,7 +2,7 @@ namespace HelloAvaloniaNXUI.Utils;
 
 public static class ObservableExtensions
 {
-    public static ReadOnlyReactiveProperty<T> ToReadOnly<T>(
+    public static ReadOnlyReactiveProperty<T> ToReactiveValue<T>(
         this Observable<T> source, R3.CompositeDisposable disposables, T initialValue = default!)
     {
         return source.DistinctUntilChanged().ToReadOnlyReactiveProperty(initialValue).AddTo(disposables);

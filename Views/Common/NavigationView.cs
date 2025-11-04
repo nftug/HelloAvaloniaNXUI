@@ -24,7 +24,7 @@ public static class NavigationView
                     {
                         var isSelected = props.SelectedIndex
                             .Select(selectedIndex => (bool?)(selectedIndex == index))
-                            .ToReadOnly(disposables);
+                            .ToReactiveValue(disposables);
 
                         return ToggleButton()
                             .Content(
@@ -68,7 +68,7 @@ public static class NavigationView
 
             var pageTitle = selectedIndex
                 .Select(index => props.Pages[index].Title)
-                .ToReadOnly(disposables, string.Empty);
+                .ToReactiveValue(disposables, string.Empty);
 
             var header = StackPanel()
                 .Dock(Dock.Top)
