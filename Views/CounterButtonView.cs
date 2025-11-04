@@ -16,36 +16,43 @@ public static class CounterActionButtonView
             .CombineLatest(props.Count, (isSetting, count) => !isSetting && count != 0)
             .ToReadOnly(disposables);
 
-        async void HandleIncrement()
-        {
-            if (!canIncrement.CurrentValue) return;
-            await props.SetCountAsync(props.Count.CurrentValue + 1, TimeSpan.FromSeconds(0.1));
-        }
+        async void HandleIncrement() =>
+            await DispatchAsync(disposables,
+                async token =>
+                {
+                    if (!canIncrement.CurrentValue) return;
+                    await props.SetCountAsync(props.Count.CurrentValue + 1, TimeSpan.FromSeconds(0.1));
+                });
 
-        async void HandleDecrement()
-        {
-            if (!canDecrement.CurrentValue) return;
-            await props.SetCountAsync(props.Count.CurrentValue - 1, TimeSpan.FromSeconds(0.1));
-        }
+        async void HandleDecrement() =>
+            await DispatchAsync(disposables,
+                async token =>
+                {
+                    if (!canDecrement.CurrentValue) return;
+                    await props.SetCountAsync(props.Count.CurrentValue - 1, TimeSpan.FromSeconds(0.1));
+                });
 
-        async void HandleReset()
-        {
-            if (!canReset.CurrentValue) return;
+        async void HandleReset() =>
+            await DispatchAsync(disposables,
+                async token =>
+                {
+                    if (!canReset.CurrentValue) return;
 
-            var ans = await ConfirmDialogView.ShowAsync(
-                "Reset Counter",
-                "Are you sure you want to reset the counter to zero?"
-            );
-            if (!ans) return;
+                    var ans = await ConfirmDialogView.ShowAsync(
+                        "Reset Counter",
+                        "Are you sure you want to reset the counter to zero?"
+                    );
+                    if (!ans) return;
 
-            await props.SetCountAsync(0, TimeSpan.FromSeconds(0.5));
+                    bool success = await props.SetCountAsync(0, TimeSpan.FromSeconds(3.0));
+                    if (!success) return;
 
-            ShowNotification(new Notification(
-                "Counter Reset",
-                "The counter has been reset to zero.",
-                NotificationType.Information
-            ));
-        }
+                    ShowNotification(new Notification(
+                        "Counter Reset",
+                        "The counter has been reset to zero.",
+                        NotificationType.Information
+                    ));
+                });
 
         return Grid()
             .Width(300)

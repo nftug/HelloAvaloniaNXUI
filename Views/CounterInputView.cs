@@ -18,12 +18,13 @@ public static class CounterInputView
             )
             .ToReadOnly(disposables);
 
-        async void HandleSetInput()
-        {
-            if (!canSetInput.CurrentValue) return;
-            if (inputCount.Value is not { } newValue) return;
-            await props.SetCountAsync((int)newValue, TimeSpan.FromSeconds(0.3));
-        }
+        async void HandleSetInput() =>
+            await DispatchAsync(disposables,
+                async token =>
+                {
+                    if (!canSetInput.CurrentValue || inputCount.Value == null) return;
+                    await props.SetCountAsync((int)inputCount.Value!, TimeSpan.FromSeconds(0.5));
+                });
 
         return Grid()
             .ColumnDefinitions("1*, Auto")

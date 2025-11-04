@@ -51,7 +51,9 @@ public static class NavigationView
                                 .HorizontalContentAlignment(HorizontalAlignment.Left)
                                 .Background(Brushes.Transparent)
                                 .BorderBrush(Brushes.Transparent)
-                        )]));
+                        )]
+                    )
+                );
 
     public static Control Build(NavigationViewProps props) => WithReactive(disposables =>
     {
