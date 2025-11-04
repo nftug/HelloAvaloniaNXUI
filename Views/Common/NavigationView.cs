@@ -15,12 +15,17 @@ public sealed record DrawerViewProps(
 
 public static class NavigationView
 {
-    private static Control BuildDrawer(DrawerViewProps props) =>
+    private static StackPanel BuildDrawer(DrawerViewProps props, R3.CompositeDisposable disposables) =>
         StackPanel()
             .Margin(10)
             .Children([.. props.Pages
                 .Select((page, index) =>
-                    ToggleButton()
+                {
+                    var isSelected = props.SelectedIndex
+                        .Select(selectedIndex => (bool?)(selectedIndex == index))
+                        .ToReadOnly(disposables);
+
+                    return ToggleButton()
                         .Content(
                             StackPanel()
                                 .Orientation(Orientation.Horizontal)
@@ -33,10 +38,8 @@ public static class NavigationView
                                         .VerticalAlignment(VerticalAlignment.Center)
                                 )
                         )
-                        .IsChecked(
-                            props.SelectedIndex
-                                .Select(selectedIndex => (bool?)(selectedIndex == index))
-                                .AsSystemObservable())
+                        .IsChecked(isSelected.AsSystemObservable())
+                        .OnIsCheckedChangedHandler((ctl, _) => ctl.IsChecked = isSelected.CurrentValue)
                         .OnClickHandler((_, _) =>
                         {
                             props.SelectedIndex.Value = index;
@@ -47,8 +50,8 @@ public static class NavigationView
                         .HorizontalAlignment(HorizontalAlignment.Stretch)
                         .HorizontalContentAlignment(HorizontalAlignment.Left)
                         .Background(Brushes.Transparent)
-                        .BorderBrush(Brushes.Transparent)
-                )]);
+                        .BorderBrush(Brushes.Transparent);
+                })]);
 
     public static Control Build(NavigationViewProps props) =>
         WithReactive(disposables =>
@@ -90,7 +93,7 @@ public static class NavigationView
                 .OpenPaneLength(250)
                 .IsPaneOpen(drawerIsOpened.AsSystemObservable())
                 .OnPaneClosedHandler((_, _) => drawerIsOpened.Value = false)
-                .Pane(BuildDrawer(new(drawerIsOpened, selectedIndex, props.Pages)))
+                .Pane(BuildDrawer(new(drawerIsOpened, selectedIndex, props.Pages), disposables))
                 .Content(
                     DockPanel()
                         .LastChildFill(true)
