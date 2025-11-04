@@ -42,10 +42,12 @@ static Window Build()
     );
 
     return Window()
-        .Title("Hello Avalonia NXUI").Width(800).Height(600)
+        .Title("Hello Avalonia NXUI").Width(1024).Height(680)
+        .WindowStartupLocation(WindowStartupLocation.CenterScreen)
         .Styles(AppStyles.Build())
         .Styles(new DialogHostStyles())
         .Styles(new MaterialIconStyles(null))
+        .AppTrayIcon()
         .Content(
             Grid()
                 .Children(

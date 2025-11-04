@@ -4,11 +4,16 @@ namespace HelloAvaloniaNXUI.Utils;
 
 public static class ApplicationUtils
 {
+    public static IClassicDesktopStyleApplicationLifetime GetApplicationLifetime()
+    {
+        return Avalonia.Application.Current?.ApplicationLifetime as IClassicDesktopStyleApplicationLifetime
+            ?? throw new InvalidOperationException("Desktop application lifetime is not available.");
+    }
+
     public static Window GetMainWindow()
     {
-        return Avalonia.Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop
-            ? desktop.MainWindow!
-            : throw new InvalidOperationException("Main window is not available.");
+        return GetApplicationLifetime().MainWindow
+            ?? throw new InvalidOperationException("Main window is not available.");
     }
 
     public static TControl GetControl<TControl>()

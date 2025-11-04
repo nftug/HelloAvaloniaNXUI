@@ -17,6 +17,7 @@ public static class NavigationView
 {
     private static Control BuildDrawer(DrawerViewProps props) =>
         StackPanel()
+            .Margin(10)
             .Children([.. props.Pages
                 .Select((page, index) =>
                     ToggleButton()
