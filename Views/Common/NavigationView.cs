@@ -15,43 +15,46 @@ public sealed record DrawerViewProps(
 
 public static class NavigationView
 {
-    private static StackPanel BuildDrawer(DrawerViewProps props, R3.CompositeDisposable disposables) =>
-        StackPanel()
-            .Margin(10)
-            .Children([.. props.Pages
-                .Select((page, index) =>
-                {
-                    var isSelected = props.SelectedIndex
-                        .Select(selectedIndex => (bool?)(selectedIndex == index))
-                        .ToReadOnly(disposables);
+    private static ContentControl BuildDrawer(DrawerViewProps props) =>
+        WithReactive((disposables) =>
+            StackPanel()
+                .Margin(10)
+                .Children([.. props.Pages
+                    .Select((page, index) =>
+                    {
+                        var isSelected = props.SelectedIndex
+                            .Select(selectedIndex => (bool?)(selectedIndex == index))
+                            .ToReadOnly(disposables);
 
-                    return ToggleButton()
-                        .Content(
-                            StackPanel()
-                                .Orientation(Orientation.Horizontal)
-                                .Spacing(10)
-                                .Children(
-                                    new MaterialIcon() { Kind = page.Icon },
-                                    TextBlock()
-                                        .Text(page.Title)
-                                        .FontSize(16)
-                                        .VerticalAlignment(VerticalAlignment.Center)
-                                )
-                        )
-                        .IsChecked(isSelected.AsSystemObservable())
-                        .OnIsCheckedChangedHandler((ctl, _) => ctl.IsChecked = isSelected.CurrentValue)
-                        .OnClickHandler((_, _) =>
-                        {
-                            props.SelectedIndex.Value = index;
-                            props.IsOpened.Value = false;
-                        })
-                        .Margin(0, 5, 0, 5)
-                        .Height(40)
-                        .HorizontalAlignment(HorizontalAlignment.Stretch)
-                        .HorizontalContentAlignment(HorizontalAlignment.Left)
-                        .Background(Brushes.Transparent)
-                        .BorderBrush(Brushes.Transparent);
-                })]);
+                        return ToggleButton()
+                            .Content(
+                                StackPanel()
+                                    .Orientation(Orientation.Horizontal)
+                                    .Spacing(10)
+                                    .Children(
+                                        new MaterialIcon() { Kind = page.Icon },
+                                        TextBlock()
+                                            .Text(page.Title)
+                                            .FontSize(16)
+                                            .VerticalAlignment(VerticalAlignment.Center)
+                                    )
+                            )
+                            .IsChecked(isSelected.AsSystemObservable())
+                            .OnIsCheckedChangedHandler((ctl, _) => ctl.IsChecked = isSelected.CurrentValue)
+                            .OnClickHandler((_, _) =>
+                            {
+                                props.SelectedIndex.Value = index;
+                                props.IsOpened.Value = false;
+                            })
+                            .Margin(0, 5, 0, 5)
+                            .Height(40)
+                            .HorizontalAlignment(HorizontalAlignment.Stretch)
+                            .HorizontalContentAlignment(HorizontalAlignment.Left)
+                            .Background(Brushes.Transparent)
+                            .BorderBrush(Brushes.Transparent);
+                    })]
+                )
+            );
 
     public static Control Build(NavigationViewProps props) =>
         WithReactive(disposables =>
@@ -93,7 +96,7 @@ public static class NavigationView
                 .OpenPaneLength(250)
                 .IsPaneOpen(drawerIsOpened.AsSystemObservable())
                 .OnPaneClosedHandler((_, _) => drawerIsOpened.Value = false)
-                .Pane(BuildDrawer(new(drawerIsOpened, selectedIndex, props.Pages), disposables))
+                .Pane(BuildDrawer(new(drawerIsOpened, selectedIndex, props.Pages)))
                 .Content(
                     DockPanel()
                         .LastChildFill(true)

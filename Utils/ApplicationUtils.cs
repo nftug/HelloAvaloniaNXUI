@@ -67,25 +67,24 @@ public static class ApplicationUtils
         }
     }
 
-    public static Grid WithReactive<TControl>(Func<R3.CompositeDisposable, TControl> onAttached)
+    public static ContentControl WithReactive<TControl>(Func<R3.CompositeDisposable, TControl> onAttached)
         where TControl : Control, new()
     {
         R3.CompositeDisposable? disposables = null;
-        var grid = new Grid();
+        var container = new ContentControl();
 
-        grid.AttachedToVisualTree += (_, _) =>
+        container.AttachedToVisualTree += (_, _) =>
         {
             disposables = [];
-            grid.Children.Clear();
-            grid.Children.Add(onAttached(disposables));
+            container.Content = onAttached(disposables);
         };
 
-        grid.DetachedFromVisualTree += (_, _) =>
+        container.DetachedFromVisualTree += (_, _) =>
         {
             disposables?.Dispose();
             disposables = null;
         };
 
-        return grid;
+        return container;
     }
 }
