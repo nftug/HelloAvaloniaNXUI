@@ -23,8 +23,8 @@ public static class CounterInputView
                 await InvokeAsync(disposables,
                     async ct =>
                     {
-                        if (!canSetInput.CurrentValue || inputCount.Value == null) return;
-                        await props.SetCountAsync((int)inputCount.Value!, TimeSpan.FromSeconds(0.5), ct);
+                        if (!canSetInput.CurrentValue || inputCount.Value is not { } value) return;
+                        await props.SetCountAsync((int)value, TimeSpan.FromSeconds(0.5), ct);
                     });
 
             return Grid()

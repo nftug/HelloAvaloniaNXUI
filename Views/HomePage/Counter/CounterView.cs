@@ -19,7 +19,8 @@ public static class CounterView
                         .Margin(0, 0, 0, 20)
                         .HorizontalAlignment(HorizontalAlignment.Center),
                     CounterInputView.Build(counterState),
-                    CounterActionButtonView.Build(counterState)
+                    CounterActionButtonView.Build(counterState),
+                    FizzBuzzView.Build(counterState)
                 );
         });
 }

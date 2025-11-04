@@ -21,7 +21,7 @@ static Window Build() =>
                     NavigationView.Build(
                         new([
                             HomePageView.BuildPageItem(),
-                            SettingsPage.BuildPageItem(),
+                            CounterListPage.BuildPageItem(),
                             AboutPage.BuildPageItem()
                         ])
                     ),
