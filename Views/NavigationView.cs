@@ -15,45 +15,39 @@ public sealed record DrawerViewProps(
 
 public static class NavigationView
 {
-    private static DockPanel BuildDrawer(DrawerViewProps props) =>
-        DockPanel()
-            .LastChildFill(true)
-            .Margin(12)
-            .Children(
-                StackPanel()
-                    .Children([.. props.Pages
-                        .Select((page, index) =>
-                            ToggleButton()
-                                .Content(
-                                    StackPanel()
-                                        .Orientation(Orientation.Horizontal)
-                                        .Spacing(10)
-                                        .Children(
-                                            new MaterialIcon() { Kind = page.Icon },
-                                            TextBlock()
-                                                .Text(page.Title)
-                                                .FontSize(16)
-                                                .VerticalAlignment(VerticalAlignment.Center)
-                                        )
+    private static Control BuildDrawer(DrawerViewProps props) =>
+        StackPanel()
+            .Children([.. props.Pages
+                .Select((page, index) =>
+                    ToggleButton()
+                        .Content(
+                            StackPanel()
+                                .Orientation(Orientation.Horizontal)
+                                .Spacing(10)
+                                .Children(
+                                    new MaterialIcon() { Kind = page.Icon },
+                                    TextBlock()
+                                        .Text(page.Title)
+                                        .FontSize(16)
+                                        .VerticalAlignment(VerticalAlignment.Center)
                                 )
-                                .IsChecked(
-                                    props.SelectedIndex
-                                        .Select(selectedIndex => (bool?)(selectedIndex == index))
-                                        .AsSystemObservable())
-                                .OnClickHandler((_, _) =>
-                                {
-                                    props.SelectedIndex.Value = index;
-                                    props.IsOpened.Value = false;
-                                })
-                                .Margin(0, 5, 0, 5)
-                                .Height(40)
-                                .HorizontalAlignment(HorizontalAlignment.Stretch)
-                                .HorizontalContentAlignment(HorizontalAlignment.Left)
-                                .Background(Brushes.Transparent)
-                                .BorderBrush(Brushes.Transparent)
-                        )]
-                    )
-                );
+                        )
+                        .IsChecked(
+                            props.SelectedIndex
+                                .Select(selectedIndex => (bool?)(selectedIndex == index))
+                                .AsSystemObservable())
+                        .OnClickHandler((_, _) =>
+                        {
+                            props.SelectedIndex.Value = index;
+                            props.IsOpened.Value = false;
+                        })
+                        .Margin(0, 5, 0, 5)
+                        .Height(40)
+                        .HorizontalAlignment(HorizontalAlignment.Stretch)
+                        .HorizontalContentAlignment(HorizontalAlignment.Left)
+                        .Background(Brushes.Transparent)
+                        .BorderBrush(Brushes.Transparent)
+                )]);
 
     public static Control Build(NavigationViewProps props) => WithReactive(disposables =>
     {
