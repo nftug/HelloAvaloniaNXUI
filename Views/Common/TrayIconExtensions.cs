@@ -1,6 +1,6 @@
 using System.ComponentModel;
 
-namespace HelloAvaloniaNXUI.Views;
+namespace HelloAvaloniaNXUI.Views.Common;
 
 public static class TrayIconExtensions
 {

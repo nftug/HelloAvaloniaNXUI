@@ -1,4 +1,4 @@
-namespace HelloAvaloniaNXUI.Views;
+namespace HelloAvaloniaNXUI.Views.HomePage.Clock;
 
 public sealed record ClockState(Observable<DateTime> CurrentTime);
 

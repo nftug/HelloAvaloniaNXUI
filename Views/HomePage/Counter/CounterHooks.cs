@@ -1,4 +1,4 @@
-namespace HelloAvaloniaNXUI.Views;
+namespace HelloAvaloniaNXUI.Views.HomePage.Counter;
 
 public record CounterState(
     ReadOnlyReactiveProperty<int> Count,

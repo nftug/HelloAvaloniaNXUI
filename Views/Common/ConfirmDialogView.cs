@@ -1,12 +1,12 @@
 using DialogHostAvalonia;
 
-namespace HelloAvaloniaNXUI.Views;
+namespace HelloAvaloniaNXUI.Views.Common;
 
 public record ConfirmDialogProps(string Title, string Message);
 
 public static class ConfirmDialogView
 {
-    public static Control Build(
+    private static StackPanel Build(
         string title, string message, object? okContent, object? cancelContent, ICommand closeCommand) =>
         StackPanel()
             .Margin(20)

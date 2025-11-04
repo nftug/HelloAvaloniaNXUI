@@ -1,7 +1,7 @@
 using Material.Icons;
 using Material.Icons.Avalonia;
 
-namespace HelloAvaloniaNXUI.Views;
+namespace HelloAvaloniaNXUI.Views.Common;
 
 public sealed record PageItem(MaterialIconKind Icon, string Title, Control View);
 

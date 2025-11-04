@@ -1,47 +1,14 @@
 ﻿using Avalonia.Controls.Notifications;
 using DialogHostAvalonia;
 using HelloAvaloniaNXUI;
-using HelloAvaloniaNXUI.Views;
-using Material.Icons;
+using HelloAvaloniaNXUI.Views.AboutPage;
+using HelloAvaloniaNXUI.Views.Common;
+using HelloAvaloniaNXUI.Views.HomePage;
+using HelloAvaloniaNXUI.Views.SettingsPage;
 using Material.Icons.Avalonia;
 
-static Window Build()
-{
-    var mainPage = new PageItem(
-        MaterialIconKind.Home,
-        "Main",
-        StackPanel()
-            .Margin(20)
-            .Spacing(20)
-            .HorizontalAlignment(HorizontalAlignment.Center)
-            .VerticalAlignment(VerticalAlignment.Center)
-            .Children(
-                ClockView.Build(),
-                CounterView.Build()
-            )
-    );
-
-    var settingsPage = new PageItem(
-        MaterialIconKind.Settings,
-        "Settings",
-        TextBlock()
-            .Text("Settings Page")
-            .FontSize(24)
-            .HorizontalAlignment(HorizontalAlignment.Center)
-            .VerticalAlignment(VerticalAlignment.Center)
-    );
-
-    var aboutPage = new PageItem(
-        MaterialIconKind.Information,
-        "About",
-        TextBlock()
-            .Text("About Page")
-            .FontSize(24)
-            .HorizontalAlignment(HorizontalAlignment.Center)
-            .VerticalAlignment(VerticalAlignment.Center)
-    );
-
-    return Window()
+static Window Build() =>
+    Window()
         .Title("Hello Avalonia NXUI").Width(1024).Height(680)
         .WindowStartupLocation(WindowStartupLocation.CenterScreen)
         .Styles(AppStyles.Build())
@@ -51,12 +18,19 @@ static Window Build()
         .Content(
             Grid()
                 .Children(
-                    NavigationView.Build(new([mainPage, settingsPage, aboutPage])),
+                    NavigationView.Build(
+                        new([
+                            HomePageView.BuildPageItem(),
+                            SettingsPage.BuildPageItem(),
+                            AboutPage.BuildPageItem()
+                        ])
+                    ),
                     WindowNotificationManager()
                         .Position(NotificationPosition.BottomCenter)
                         .MaxItems(1),
-                    new DialogHost()));
-}
+                    new DialogHost()
+                )
+        );
 
 AppBuilder.Configure<Application>()
   .UsePlatformDetect()

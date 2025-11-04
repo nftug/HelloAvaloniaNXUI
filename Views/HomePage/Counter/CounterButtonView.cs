@@ -1,6 +1,7 @@
 using Avalonia.Controls.Notifications;
+using HelloAvaloniaNXUI.Views.Common;
 
-namespace HelloAvaloniaNXUI.Views;
+namespace HelloAvaloniaNXUI.Views.HomePage.Counter;
 
 public static class CounterActionButtonView
 {
