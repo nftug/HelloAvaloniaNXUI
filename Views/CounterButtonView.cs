@@ -4,10 +4,8 @@ namespace HelloAvaloniaNXUI.Views;
 
 public static class CounterActionButtonView
 {
-    public static Control Build(CounterState props)
+    public static Control Build(CounterState props) => WithReactive((disposables) =>
     {
-        var disposables = new R3.CompositeDisposable();
-
         var canIncrement = props.IsSetting.Select(v => !v).ToReadOnly(disposables);
 
         var canDecrement = props.IsSetting
@@ -77,7 +75,6 @@ public static class CounterActionButtonView
                     .Column(0)
                     .ColumnSpan(2)
                     .Row(1)
-            )
-            .OnDetached(disposables.Dispose);
-    }
+            );
+    });
 }

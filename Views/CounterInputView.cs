@@ -2,9 +2,8 @@ namespace HelloAvaloniaNXUI.Views;
 
 public static class CounterInputView
 {
-    public static Control Build(CounterState props)
+    public static Control Build(CounterState props) => WithReactive((disposables) =>
     {
-        var disposables = new R3.CompositeDisposable();
         var inputCount = new ReactiveProperty<decimal?>(props.Count.CurrentValue).AddTo(disposables);
 
         props.Count
@@ -45,7 +44,6 @@ public static class CounterInputView
                     .Margin(5.0, 0.0)
                     .Width(80)
                     .Column(1)
-            )
-            .OnDetached(disposables.Dispose);
-    }
+            );
+    });
 }

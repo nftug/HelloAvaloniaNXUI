@@ -8,4 +8,11 @@ public static class ControlExtensions
         control.DetachedFromVisualTree += (_, _) => action();
         return control;
     }
+
+    public static TControl OnAttached<TControl>(this TControl control, Action action)
+        where TControl : Control
+    {
+        control.AttachedToVisualTree += (_, _) => action();
+        return control;
+    }
 }

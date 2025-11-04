@@ -24,4 +24,26 @@ public static class ApplicationUtils
         var notificationManager = GetControl<WindowNotificationManager>();
         notificationManager.Show(notification);
     }
+
+    public static Grid WithReactive<TControl>(Func<R3.CompositeDisposable, TControl> onAttached)
+        where TControl : Control, new()
+    {
+        R3.CompositeDisposable? disposables = null;
+        var grid = new Grid();
+
+        grid.AttachedToVisualTree += (_, _) =>
+        {
+            disposables = [];
+            grid.Children.Clear();
+            grid.Children.Add(onAttached(disposables));
+        };
+
+        grid.DetachedFromVisualTree += (_, _) =>
+        {
+            disposables?.Dispose();
+            disposables = null;
+        };
+
+        return grid;
+    }
 }

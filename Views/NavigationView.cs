@@ -53,10 +53,8 @@ public static class NavigationView
                                 .BorderBrush(Brushes.Transparent)
                         )]));
 
-    public static Control Build(NavigationViewProps props)
+    public static Control Build(NavigationViewProps props) => WithReactive(disposables =>
     {
-        var disposables = new R3.CompositeDisposable();
-
         var drawerIsOpened = new ReactiveProperty<bool>(false).AddTo(disposables);
         var selectedIndex = new ReactiveProperty<int>(0).AddTo(disposables);
 
@@ -107,7 +105,6 @@ public static class NavigationView
                                     .AsSystemObservable()
                             )
                     )
-            )
-            .OnDetached(disposables.Dispose);
-    }
+            );
+    });
 }

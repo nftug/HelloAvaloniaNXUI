@@ -8,9 +8,9 @@ public record CounterState(
 
 public static class CounterHooks
 {
-    private static async Task<int> FetchDelayedCountAsync(int newCount, TimeSpan delay)
+    private static async Task<int> FetchDelayedCountAsync(int newCount, TimeSpan delay, CancellationToken token)
     {
-        await Task.Delay(delay);
+        await Task.Delay(delay, token);
         return newCount;
     }
 
@@ -19,17 +19,29 @@ public static class CounterHooks
         var count = new ReactiveProperty<int>(0).AddTo(disposables);
         var isSetting = new ReactiveProperty<bool>(false).AddTo(disposables);
 
+        var cts = new CancellationTokenSource();
+
+        // 破棄時にキャンセル
+        disposables.Add(R3.Disposable.Create(cts.Cancel));
+
         async Task SetCountAsync(int newCount, TimeSpan delay)
         {
+            isSetting.Value = true;
             try
             {
-                isSetting.Value = true;
-                var delayedCount = await FetchDelayedCountAsync(newCount, delay);
-                count.Value = delayedCount;
+                var delayedCount = await FetchDelayedCountAsync(newCount, delay, cts.Token);
+                if (cts.IsCancellationRequested) return;
+                if (!count.IsDisposed)
+                    count.Value = delayedCount;
+            }
+            catch (OperationCanceledException)
+            {
+                // キャンセル時は握りつぶす
             }
             finally
             {
-                isSetting.Value = false;
+                if (!isSetting.IsDisposed)
+                    isSetting.Value = false;
             }
         }
 

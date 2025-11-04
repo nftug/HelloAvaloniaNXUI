@@ -2,10 +2,8 @@ namespace HelloAvaloniaNXUI.Views;
 
 public static class CounterView
 {
-    public static Control Build()
+    public static Control Build() => WithReactive((disposables) =>
     {
-        var disposables = new R3.CompositeDisposable();
-
         var counterState = CounterHooks.UseDelayedCounter(disposables);
 
         return StackPanel()
@@ -21,7 +19,6 @@ public static class CounterView
                     .HorizontalAlignment(HorizontalAlignment.Center),
                 CounterInputView.Build(counterState),
                 CounterActionButtonView.Build(counterState)
-            )
-            .OnDetached(disposables.Dispose);
-    }
+            );
+    });
 }
