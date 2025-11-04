@@ -49,58 +49,59 @@ public static class NavigationView
                         .BorderBrush(Brushes.Transparent)
                 )]);
 
-    public static Control Build(NavigationViewProps props) => WithReactive(disposables =>
-    {
-        var drawerIsOpened = new ReactiveProperty<bool>(false).AddTo(disposables);
-        var selectedIndex = new ReactiveProperty<int>(0).AddTo(disposables);
+    public static Control Build(NavigationViewProps props) =>
+        WithReactive(disposables =>
+        {
+            var drawerIsOpened = new ReactiveProperty<bool>(false).AddTo(disposables);
+            var selectedIndex = new ReactiveProperty<int>(0).AddTo(disposables);
 
-        selectedIndex
-            .Subscribe(index => props.OnSelectedIndexChanged?.Invoke(index))
-            .AddTo(disposables);
+            selectedIndex
+                .Subscribe(index => props.OnSelectedIndexChanged?.Invoke(index))
+                .AddTo(disposables);
 
-        var pageTitle = selectedIndex
-            .Select(index => props.Pages[index].Title)
-            .ToReadOnly(disposables, string.Empty);
+            var pageTitle = selectedIndex
+                .Select(index => props.Pages[index].Title)
+                .ToReadOnly(disposables, string.Empty);
 
-        var header = StackPanel()
-            .Dock(Dock.Top)
-            .Orientation(Orientation.Horizontal)
-            .Height(50)
-            .Margin(5)
-            .Children(
-                Button()
-                    .Content(new MaterialIcon() { Kind = MaterialIconKind.Menu })
-                    .Width(50)
-                    .Height(50)
-                    .FontSize(18)
-                    .Background(Brushes.Transparent)
-                    .BorderBrush(Brushes.Transparent)
-                    .OnClickHandler((_, _) => drawerIsOpened.Value = true),
-                TextBlock()
-                    .Text(pageTitle.AsSystemObservable())
-                    .FontSize(21)
-                    .VerticalAlignment(VerticalAlignment.Center)
-                    .Margin(20, 0, 0, 0)
-            );
+            var header = StackPanel()
+                .Dock(Dock.Top)
+                .Orientation(Orientation.Horizontal)
+                .Height(50)
+                .Margin(5)
+                .Children(
+                    Button()
+                        .Content(new MaterialIcon() { Kind = MaterialIconKind.Menu })
+                        .Width(50)
+                        .Height(50)
+                        .FontSize(18)
+                        .Background(Brushes.Transparent)
+                        .BorderBrush(Brushes.Transparent)
+                        .OnClickHandler((_, _) => drawerIsOpened.Value = true),
+                    TextBlock()
+                        .Text(pageTitle.AsSystemObservable())
+                        .FontSize(21)
+                        .VerticalAlignment(VerticalAlignment.Center)
+                        .Margin(20, 0, 0, 0)
+                );
 
-        return SplitView()
-            .DisplayMode(SplitViewDisplayMode.Overlay)
-            .OpenPaneLength(250)
-            .IsPaneOpen(drawerIsOpened.AsSystemObservable())
-            .OnPaneClosedHandler((_, _) => drawerIsOpened.Value = false)
-            .Pane(BuildDrawer(new(drawerIsOpened, selectedIndex, props.Pages)))
-            .Content(
-                DockPanel()
-                    .LastChildFill(true)
-                    .Children(
-                        header,
-                        ContentControl()
-                            .Content(
-                                selectedIndex
-                                    .Select(index => props.Pages[index].View)
-                                    .AsSystemObservable()
-                            )
-                    )
-            );
-    });
+            return SplitView()
+                .DisplayMode(SplitViewDisplayMode.Overlay)
+                .OpenPaneLength(250)
+                .IsPaneOpen(drawerIsOpened.AsSystemObservable())
+                .OnPaneClosedHandler((_, _) => drawerIsOpened.Value = false)
+                .Pane(BuildDrawer(new(drawerIsOpened, selectedIndex, props.Pages)))
+                .Content(
+                    DockPanel()
+                        .LastChildFill(true)
+                        .Children(
+                            header,
+                            ContentControl()
+                                .Content(
+                                    selectedIndex
+                                        .Select(index => props.Pages[index].View)
+                                        .AsSystemObservable()
+                                )
+                        )
+                );
+        });
 }

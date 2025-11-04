@@ -22,15 +22,16 @@ public static class ClockHooks
 
 public static class ClockView
 {
-    public static Control Build() => WithReactive(disposables =>
-    {
-        var clockState = ClockHooks.UseClock(disposables);
-        return TextBlock()
-            .FontSize(56)
-            .Margin(10)
-            .HorizontalAlignment(HorizontalAlignment.Center)
-            .Text(clockState.CurrentTime
-                .Select(t => t.ToString("HH:mm:ss"))
-                .AsSystemObservable());
-    });
+    public static Control Build() =>
+        WithReactive(disposables =>
+        {
+            var clockState = ClockHooks.UseClock(disposables);
+            return TextBlock()
+                .FontSize(56)
+                .Margin(10)
+                .HorizontalAlignment(HorizontalAlignment.Center)
+                .Text(clockState.CurrentTime
+                    .Select(t => t.ToString("HH:mm:ss"))
+                    .AsSystemObservable());
+        });
 }
