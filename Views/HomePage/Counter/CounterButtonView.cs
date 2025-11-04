@@ -19,24 +19,24 @@ public static class CounterActionButtonView
                 .ToReadOnly(disposables);
 
             async void HandleIncrement() =>
-                await DispatchAsync(disposables,
-                    async token =>
+                await InvokeAsync(disposables,
+                    async ct =>
                     {
                         if (!canIncrement.CurrentValue) return;
-                        await props.SetCountAsync(props.Count.CurrentValue + 1, TimeSpan.FromSeconds(0.1));
+                        await props.SetCountAsync(props.Count.CurrentValue + 1, TimeSpan.FromSeconds(0.1), ct);
                     });
 
             async void HandleDecrement() =>
-                await DispatchAsync(disposables,
-                    async token =>
+                await InvokeAsync(disposables,
+                    async ct =>
                     {
                         if (!canDecrement.CurrentValue) return;
-                        await props.SetCountAsync(props.Count.CurrentValue - 1, TimeSpan.FromSeconds(0.1));
+                        await props.SetCountAsync(props.Count.CurrentValue - 1, TimeSpan.FromSeconds(0.1), ct);
                     });
 
             async void HandleReset() =>
-                await DispatchAsync(disposables,
-                    async token =>
+                await InvokeAsync(disposables,
+                    async ct =>
                     {
                         if (!canReset.CurrentValue) return;
 
@@ -46,8 +46,7 @@ public static class CounterActionButtonView
                         );
                         if (!ans) return;
 
-                        bool success = await props.SetCountAsync(0, TimeSpan.FromSeconds(3.0));
-                        if (!success) return;
+                        await props.SetCountAsync(0, TimeSpan.FromSeconds(3.0), ct);
 
                         ShowNotification(new Notification(
                             "Counter Reset",

@@ -30,40 +30,21 @@ public static class ApplicationUtils
         notificationManager.Show(notification);
     }
 
-    // ---- Async cancellation helpers ----
-    public static CancellationTokenSource LinkCancellation(R3.CompositeDisposable disposables)
+    public static async Task InvokeAsync(R3.CompositeDisposable disposables, Func<CancellationToken, Task> work)
     {
+        // Create a linked cancellation token source
         var cts = new CancellationTokenSource();
         disposables.Add(R3.Disposable.Create(cts.Cancel));
-        return cts;
-    }
 
-    public static async Task<bool> DispatchAsync(
-        R3.CompositeDisposable disposables,
-        Func<CancellationToken, Task> work,
-        Action? finallyAction = null
-    )
-    {
-        var cts = LinkCancellation(disposables);
         try
         {
             await work(cts.Token);
-            if (cts.IsCancellationRequested)
-                throw new OperationCanceledException();
-            return true;
         }
         catch (OperationCanceledException)
         {
-            return false;
         }
         catch (ObjectDisposedException)
         {
-            return false;
-        }
-        finally
-        {
-            if (!cts.IsCancellationRequested)
-                finallyAction?.Invoke();
         }
     }
 

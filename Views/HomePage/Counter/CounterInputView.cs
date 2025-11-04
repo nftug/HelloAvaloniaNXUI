@@ -20,11 +20,11 @@ public static class CounterInputView
                 .ToReadOnly(disposables);
 
             async void HandleSetInput() =>
-                await DispatchAsync(disposables,
-                    async token =>
+                await InvokeAsync(disposables,
+                    async ct =>
                     {
                         if (!canSetInput.CurrentValue || inputCount.Value == null) return;
-                        await props.SetCountAsync((int)inputCount.Value!, TimeSpan.FromSeconds(0.5));
+                        await props.SetCountAsync((int)inputCount.Value!, TimeSpan.FromSeconds(0.5), ct);
                     });
 
             return Grid()
