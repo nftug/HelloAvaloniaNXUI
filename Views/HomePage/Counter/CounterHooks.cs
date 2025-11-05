@@ -1,8 +1,8 @@
 namespace HelloAvaloniaNXUI.Views.HomePage.Counter;
 
 public record CounterState(
-    ReadOnlyReactiveProperty<int> Count,
-    ReadOnlyReactiveProperty<bool> IsSetting,
+    Observable<int> Count,
+    Observable<bool> IsSetting,
     Func<int, TimeSpan, CancellationToken, Task> SetCountAsync
 );
 

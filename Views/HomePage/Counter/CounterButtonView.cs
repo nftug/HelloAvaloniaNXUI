@@ -8,42 +8,30 @@ public static class CounterActionButtonView
     public static Control Build(CounterState props) =>
         WithReactive((disposables) =>
         {
-            var canIncrement = props.IsSetting.Select(v => !v).ToReactiveValue(disposables);
+            var count = props.Count.ToReactiveValue(disposables);
+
+            var canIncrement = props.IsSetting.Select(v => !v);
 
             var canDecrement = props.IsSetting
-                .CombineLatest(props.Count, (isSetting, count) => !isSetting && count > 0)
-                .ToReactiveValue(disposables);
+                .CombineLatest(count, (isSetting, count) => !isSetting && count > 0);
 
             var canReset = props.IsSetting
-                .CombineLatest(props.Count, (isSetting, count) => !isSetting && count != 0)
-                .ToReactiveValue(disposables);
+                .CombineLatest(count, (isSetting, count) => !isSetting && count != 0);
 
             async void HandleIncrement() =>
                 await InvokeAsync(disposables,
-                    async ct =>
-                    {
-                        if (!canIncrement.CurrentValue) return;
-                        await props.SetCountAsync(props.Count.CurrentValue + 1, TimeSpan.FromSeconds(0.1), ct);
-                    });
+                    ct => props.SetCountAsync(count.CurrentValue + 1, TimeSpan.FromSeconds(0.1), ct));
 
             async void HandleDecrement() =>
                 await InvokeAsync(disposables,
-                    async ct =>
-                    {
-                        if (!canDecrement.CurrentValue) return;
-                        await props.SetCountAsync(props.Count.CurrentValue - 1, TimeSpan.FromSeconds(0.1), ct);
-                    });
+                    ct => props.SetCountAsync(count.CurrentValue - 1, TimeSpan.FromSeconds(0.1), ct));
 
             async void HandleReset() =>
                 await InvokeAsync(disposables,
                     async ct =>
                     {
-                        if (!canReset.CurrentValue) return;
-
                         var ans = await ConfirmDialogView.ShowAsync(
-                            "Reset Counter",
-                            "Are you sure you want to reset the counter to zero?"
-                        );
+                            "Reset Counter", "Are you sure you want to reset the counter to zero?", ct);
                         if (!ans) return;
 
                         await props.SetCountAsync(0, TimeSpan.FromSeconds(3.0), ct);

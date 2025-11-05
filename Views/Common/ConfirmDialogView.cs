@@ -40,11 +40,14 @@ public static class ConfirmDialogView
             );
 
     public static async Task<bool> ShowAsync(
-        string title, string message, object? okContent = null, object? cancelContent = null)
+        string title, string message, object? okContent = null, object? cancelContent = null, CancellationToken ct = default)
     {
         var dialogHost = GetControl<DialogHost>();
         var dialog = Build(title, message, okContent, cancelContent, dialogHost.CloseDialogCommand);
         var result = await DialogHost.Show(dialog);
+
+        ct.ThrowIfCancellationRequested();
+
         return result is bool b && b;
     }
 }

@@ -5,26 +5,25 @@ public static class CounterInputView
     public static Control Build(CounterState props) =>
         WithReactive((disposables) =>
         {
-            var inputCount = new ReactiveProperty<decimal?>(props.Count.CurrentValue).AddTo(disposables);
+            var count = props.Count.ToReactiveValue(disposables);
 
-            props.Count
-                .Subscribe(c => inputCount.Value = c)
-                .AddTo(disposables);
+            var inputCount = new ReactiveProperty<decimal?>(count.CurrentValue).AddTo(disposables);
+
+            count.Subscribe(c => inputCount.Value = c).AddTo(disposables);
 
             var canSetInput = props.IsSetting
                 .CombineLatest(
-                    props.Count,
+                    count,
                     inputCount,
                     (isSetting, current, input) => !isSetting && input != current
-                )
-                .ToReactiveValue(disposables);
+                );
 
             async void HandleSetInput() =>
                 await InvokeAsync(disposables,
                     async ct =>
                     {
-                        if (!canSetInput.CurrentValue || inputCount.Value is not { } value) return;
-                        await props.SetCountAsync((int)value, TimeSpan.FromSeconds(0.5), ct);
+                        if (inputCount.Value is { } value)
+                            await props.SetCountAsync((int)value, TimeSpan.FromSeconds(0.5), ct);
                     });
 
             return Grid()
