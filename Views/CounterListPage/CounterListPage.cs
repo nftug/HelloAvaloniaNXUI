@@ -36,11 +36,7 @@ public static class CounterListPage
 
             var countersLength = counters.ObservePropertyChanged(c => c.Count);
 
-            var countersSum = countersLength.Prepend(0)
-                .SelectMany(_ =>
-                    counters.Count == 0
-                        ? Observable.Return(0)
-                        : Observable.CombineLatest(counters).Select(v => v.Sum()));
+            var countersSum = counters.MapFromCollectionChanged(items => items.Sum());
 
             void handleClickAdd()
             {
