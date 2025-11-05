@@ -5,12 +5,13 @@ namespace HelloAvaloniaNXUI.Views.Common;
 
 public sealed record PageItem(MaterialIconKind Icon, string Title, Control View);
 
-public sealed record NavigationViewProps(IReadOnlyList<PageItem> Pages, Action<int>? OnSelectedIndexChanged = null);
+public sealed record NavigationViewProps(
+    IReadOnlyDictionary<string, PageItem> Pages, string InitialPage, Action<string>? OnCurrentPageChanged = null);
 
 public sealed record DrawerViewProps(
     ReactiveProperty<bool> IsOpened,
-    ReactiveProperty<int> SelectedIndex,
-    IReadOnlyList<PageItem> Pages
+    ReactiveProperty<string> SelectedKey,
+    IReadOnlyDictionary<string, PageItem> Pages
 );
 
 public static class NavigationView
@@ -19,11 +20,9 @@ public static class NavigationView
         WithReactive((disposables) =>
             StackPanel()
                 .Margin(10)
-                .Children([.. props.Pages
-                    .Select((page, index) =>
-                    {
-                        var isSelected = props.SelectedIndex
-                            .Select(selectedIndex => (bool?)(selectedIndex == index))
+                .Children([.. props.Pages.Select(page => {
+                    var isSelected = props.SelectedKey
+                            .Select(selected => (bool?)(selected == page.Key))
                             .ToReactiveValue(disposables);
 
                         return ToggleButton()
@@ -32,9 +31,9 @@ public static class NavigationView
                                     .Orientation(Orientation.Horizontal)
                                     .Spacing(10)
                                     .Children(
-                                        new MaterialIcon() { Kind = page.Icon },
+                                        new MaterialIcon() { Kind = page.Value.Icon },
                                         TextBlock()
-                                            .Text(page.Title)
+                                            .Text(page.Value.Title)
                                             .FontSize(16)
                                             .VerticalAlignment(VerticalAlignment.Center)
                                     )
@@ -43,7 +42,7 @@ public static class NavigationView
                             .OnIsCheckedChangedHandler((ctl, _) => ctl.IsChecked = isSelected.CurrentValue)
                             .OnClickHandler((_, _) =>
                             {
-                                props.SelectedIndex.Value = index;
+                                props.SelectedKey.Value = page.Key;
                                 props.IsOpened.Value = false;
                             })
                             .Margin(0, 5, 0, 5)
@@ -52,7 +51,7 @@ public static class NavigationView
                             .HorizontalContentAlignment(HorizontalAlignment.Left)
                             .Background(Brushes.Transparent)
                             .BorderBrush(Brushes.Transparent);
-                    })]
+                })]
                 )
             );
 
@@ -60,14 +59,14 @@ public static class NavigationView
         WithReactive(disposables =>
         {
             var drawerIsOpened = new ReactiveProperty<bool>(false).AddTo(disposables);
-            var selectedIndex = new ReactiveProperty<int>(0).AddTo(disposables);
+            var selectedKey = new ReactiveProperty<string>(props.InitialPage).AddTo(disposables);
 
-            selectedIndex
-                .Subscribe(index => props.OnSelectedIndexChanged?.Invoke(index))
+            selectedKey
+                .Subscribe(key => props.OnCurrentPageChanged?.Invoke(key))
                 .AddTo(disposables);
 
-            var pageTitle = selectedIndex
-                .Select(index => props.Pages[index].Title)
+            var pageTitle = selectedKey
+                .Select(key => props.Pages.TryGetValue(key, out var page) ? page.Title : "Unknown")
                 .ToReactiveValue(disposables, string.Empty);
 
             var header = StackPanel()
@@ -93,10 +92,11 @@ public static class NavigationView
 
             return SplitView()
                 .DisplayMode(SplitViewDisplayMode.Overlay)
+                .UseLightDismissOverlayMode(true)
                 .OpenPaneLength(250)
                 .IsPaneOpen(drawerIsOpened.AsSystemObservable())
                 .OnPaneClosedHandler((_, _) => drawerIsOpened.Value = false)
-                .Pane(BuildDrawer(new(drawerIsOpened, selectedIndex, props.Pages)))
+                .Pane(BuildDrawer(new(drawerIsOpened, selectedKey, props.Pages)))
                 .Content(
                     DockPanel()
                         .LastChildFill(true)
@@ -104,8 +104,8 @@ public static class NavigationView
                             header,
                             ContentControl()
                                 .Content(
-                                    selectedIndex
-                                        .Select(index => props.Pages[index].View)
+                                    selectedKey
+                                        .Select(key => props.Pages.TryGetValue(key, out var page) ? page.View : null)
                                         .AsSystemObservable()
                                 )
                         )

@@ -7,7 +7,7 @@ using HelloAvaloniaNXUI.Views.CounterListPage;
 using HelloAvaloniaNXUI.Views.HomePage;
 using Material.Icons.Avalonia;
 
-static Window Build() =>
+Window Build() =>
     Window()
         .Title("Hello Avalonia NXUI").Width(1024).Height(680)
         .WindowStartupLocation(WindowStartupLocation.CenterScreen)
@@ -18,13 +18,15 @@ static Window Build() =>
         .Content(
             Grid()
                 .Children(
-                    NavigationView.Build(
-                        new([
-                            HomePageView.BuildPageItem(),
-                            CounterListPage.BuildPageItem(),
-                            AboutPage.BuildPageItem()
-                        ])
-                    ),
+                    NavigationView.Build(new(
+                        new Dictionary<string, PageItem>
+                        {
+                            ["/home"] = HomePageView.BuildPageItem(),
+                            ["/counter-list"] = CounterListPage.BuildPageItem(),
+                            ["/about"] = AboutPage.BuildPageItem(),
+                        },
+                        "/home"
+                    )),
                     WindowNotificationManager()
                         .Position(NotificationPosition.BottomCenter)
                         .MaxItems(1),
