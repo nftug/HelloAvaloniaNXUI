@@ -21,11 +21,10 @@ public static class TrayIconExtensions
         exitCommand.Subscribe(async _ =>
         {
             showCommand.Execute(Unit.Default);
-            var confirmed = await ConfirmDialogView.ShowAsync(
-                "Exit Application",
-                "Are you sure you want to exit the application?",
-                "Exit",
-                "Cancel"
+            var confirmed = await MessageBoxView.ShowAsync(
+                new("Exit Application",
+                    "Are you sure you want to exit the application?",
+                    MessageBoxButton.OkCancel)
             );
             if (!confirmed) return;
 
@@ -48,8 +47,23 @@ public static class TrayIconExtensions
 
     public static Window AppTrayIcon(this Window window)
     {
-        var trayIcon = BuildTrayIcon();
-        Avalonia.Controls.TrayIcon.SetIcons(Avalonia.Application.Current!, [trayIcon]);
+        window.Loaded += async (_, _) =>
+        {
+            if (!FileLockSingleInstanceGuard.TryAcquireLock())
+            {
+                await MessageBoxView.ShowAsync(
+                    new("Application Already Running",
+                        "Another instance of this application is already running.",
+                        MessageBoxButton.Ok
+                    ));
+                GetApplicationLifetime().Shutdown();
+            }
+            else
+            {
+                var trayIcon = BuildTrayIcon();
+                Avalonia.Controls.TrayIcon.SetIcons(Avalonia.Application.Current!, [trayIcon]);
+            }
+        };
 
         static void HandleClosingRequested(object? sender, CancelEventArgs e)
         {
@@ -58,8 +72,8 @@ public static class TrayIconExtensions
             win.Hide();
         }
 
-        GetApplicationLifetime().ShutdownRequested += HandleClosingRequested;
         window.Closing += HandleClosingRequested;
+        GetApplicationLifetime().ShutdownRequested += (_, _) => FileLockSingleInstanceGuard.ReleaseLock();
 
         return window;
     }

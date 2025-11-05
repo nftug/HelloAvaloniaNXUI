@@ -30,8 +30,11 @@ public static class CounterActionButtonView
                 await InvokeAsync(disposables,
                     async ct =>
                     {
-                        var ans = await ConfirmDialogView.ShowAsync(
-                            "Reset Counter", "Are you sure you want to reset the counter to zero?", ct);
+                        var ans = await MessageBoxView.ShowAsync(
+                            new("Reset Counter",
+                                "Are you sure you want to reset the counter to zero?",
+                                MessageBoxButton.OkCancel), ct);
+
                         if (!ans) return;
 
                         await props.SetCountAsync(0, TimeSpan.FromSeconds(3.0), ct);
