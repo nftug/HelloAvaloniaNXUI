@@ -30,11 +30,11 @@ public static class ApplicationUtils
         notificationManager.Show(notification);
     }
 
-    public static async Task InvokeAsync(R3.CompositeDisposable disposables, Func<CancellationToken, Task> work)
+    public static async Task InvokeAsync(CompositeDisposable disposables, Func<CancellationToken, Task> work)
     {
         // Create a linked cancellation token source
         var cts = new CancellationTokenSource();
-        disposables.Add(R3.Disposable.Create(cts.Cancel));
+        disposables.Add(Disposable.Create(cts.Cancel));
 
         try
         {
@@ -48,10 +48,10 @@ public static class ApplicationUtils
         }
     }
 
-    public static ContentControl WithReactive<TControl>(Func<R3.CompositeDisposable, TControl> onAttached)
-        where TControl : Control, new()
+    public static ContentControl WithReactive<TControl>(Func<CompositeDisposable, TControl> onAttached)
+        where TControl : Visual, new()
     {
-        R3.CompositeDisposable? disposables = null;
+        CompositeDisposable? disposables = null;
         var container = new ContentControl();
 
         container.AttachedToVisualTree += (_, _) =>

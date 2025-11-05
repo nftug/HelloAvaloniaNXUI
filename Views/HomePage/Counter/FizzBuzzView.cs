@@ -4,7 +4,10 @@ public static class FizzBuzzView
 {
     public static Control Build(CounterState props) =>
         WithReactive((disposables) =>
-            props.Count
+        {
+            var inputText = new ReactiveProperty<string?>().AddTo(disposables);
+
+            return props.Count
                 .Select(count => count switch
                 {
                     0 => null,
@@ -16,14 +19,22 @@ public static class FizzBuzzView
                 .ToView(text =>
                     text switch
                     {
-                        { } result => TextBlock()
-                            .Text(result)
-                            .FontSize(24)
-                            .FontWeight(FontWeight.Bold)
-                            .Foreground(Brushes.Orange)
-                            .Margin(0, 20, 0, 0)
-                            .HorizontalAlignment(HorizontalAlignment.Center),
-                        _ => null
-                    })
-            );
+                        { } result =>
+                            TextBlock()
+                                .Text(text)
+                                .FontSize(24)
+                                .FontWeightBold()
+                                .Foreground(Brushes.Orange)
+                                .Margin(0, 18, 0, 0)
+                                .HorizontalAlignmentCenter(),
+                        _ =>
+                            TextBox()
+                                .Text(inputText.AsSystemObservable())
+                                .OnTextChangedHandler((ctl, _) => inputText.Value = ctl.Text)
+                                .Margin(0, 20, 0, 0)
+                                .Width(200)
+                                .HorizontalAlignmentCenter()
+                                .VerticalContentAlignmentCenter()
+                    });
+        });
 }

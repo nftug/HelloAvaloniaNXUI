@@ -3,7 +3,7 @@ namespace HelloAvaloniaNXUI.Utils;
 public static class ObservableExtensions
 {
     public static ReadOnlyReactiveProperty<T> ToReactiveValue<T>(
-        this Observable<T> source, R3.CompositeDisposable disposables, T initialValue = default!)
+        this Observable<T> source, CompositeDisposable disposables, T initialValue = default!)
     {
         return source.DistinctUntilChanged().ToReadOnlyReactiveProperty(initialValue).AddTo(disposables);
     }
@@ -11,7 +11,7 @@ public static class ObservableExtensions
     public static Control ToView<T>(
         this Observable<T> source,
         Func<T, Control?> render,
-        R3.CompositeDisposable? disposables = null)
+        CompositeDisposable? disposables = null)
     {
         var container = ContentControl();
 
@@ -23,7 +23,7 @@ public static class ObservableExtensions
         if (disposables != null)
             disposables.Add(d);
         else
-            container.DetachedFromLogicalTree += (_, _) => d.Dispose();
+            container.DetachedFromVisualTree += (_, _) => d.Dispose();
 
         return container;
     }

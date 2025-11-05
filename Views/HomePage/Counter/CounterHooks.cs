@@ -14,7 +14,7 @@ public static class CounterHooks
         return newCount;
     }
 
-    public static CounterState UseDelayedCounter(R3.CompositeDisposable disposables)
+    public static CounterState UseDelayedCounter(CompositeDisposable disposables)
     {
         var count = new ReactiveProperty<int>(0).AddTo(disposables);
         var isSetting = new ReactiveProperty<bool>(false).AddTo(disposables);
