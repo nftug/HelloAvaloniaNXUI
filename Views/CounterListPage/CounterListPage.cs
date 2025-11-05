@@ -1,7 +1,7 @@
 using HelloAvaloniaNXUI.Views.Common;
 using Material.Icons;
 
-namespace HelloAvaloniaNXUI.Views.SettingsPage;
+namespace HelloAvaloniaNXUI.Views.CounterListPage;
 
 public static class CounterListPage
 {
@@ -13,6 +13,14 @@ public static class CounterListPage
             );
 
             var countersLength = counters.ObservePropertyChanged(c => c.Count);
+
+            var countersSum = counters
+                .ObservePropertyChanged(c => c.Count)
+                .Prepend(0)
+                .SelectMany(_ =>
+                    counters.Count == 0
+                        ? R3.Observable.Return(0)
+                        : R3.Observable.CombineLatest(counters).Select(v => v.Sum()));
 
             var addButton = Button()
                 .Content("Add Counter")
@@ -74,7 +82,7 @@ public static class CounterListPage
                                 .HorizontalAlignmentCenter()
                                 .Children(addButton, removeButton),
                             TextBlock()
-                                .Text(countersLength.Select(len => $"Total Counters: {len}").AsSystemObservable())
+                                .Text(countersSum.Select(sum => $"Counters Sum: {sum}").AsSystemObservable())
                                 .FontSize(24)
                                 .FontWeight(FontWeight.Bold)
                                 .HorizontalAlignment(HorizontalAlignment.Center)

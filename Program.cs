@@ -3,8 +3,8 @@ using DialogHostAvalonia;
 using HelloAvaloniaNXUI;
 using HelloAvaloniaNXUI.Views.AboutPage;
 using HelloAvaloniaNXUI.Views.Common;
+using HelloAvaloniaNXUI.Views.CounterListPage;
 using HelloAvaloniaNXUI.Views.HomePage;
-using HelloAvaloniaNXUI.Views.SettingsPage;
 using Material.Icons.Avalonia;
 
 static Window Build() =>
