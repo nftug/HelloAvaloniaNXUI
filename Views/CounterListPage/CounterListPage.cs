@@ -84,7 +84,7 @@ public static class CounterListPage
                         .Dock(Dock.Bottom)
                         .Content(ItemsControl()
                             .ItemsSource(counters)
-                            .ItemTemplateReactiveProperty<int>(BuildCounterItem)
+                            .ItemTemplateObservable<int>(BuildCounterItem)
                         )
                         .Margin(10)
                         .VerticalScrollBarVisibility(ScrollBarVisibility.Auto)
