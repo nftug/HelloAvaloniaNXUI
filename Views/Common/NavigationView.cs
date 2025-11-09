@@ -20,22 +20,23 @@ public static class NavigationView
         WithReactive((disposables) =>
             StackPanel()
                 .Margin(10)
-                .Children([.. props.Pages.Select(page => {
-                    var isSelected = props.SelectedKey
+                .Children(
+                    [.. props.Pages.Select(page => {
+                        var isSelected = props.SelectedKey
                             .Select(selected => (bool?)(selected == page.Key))
                             .ToReactiveValue(disposables);
 
                         return ToggleButton()
                             .Content(
                                 StackPanel()
-                                    .Orientation(Orientation.Horizontal)
+                                    .OrientationHorizontal()
                                     .Spacing(10)
                                     .Children(
                                         new MaterialIcon() { Kind = page.Value.Icon },
                                         TextBlock()
                                             .Text(page.Value.Title)
                                             .FontSize(16)
-                                            .VerticalAlignment(VerticalAlignment.Center)
+                                            .VerticalAlignmentCenter()
                                     )
                             )
                             .IsChecked(isSelected.AsSystemObservable())
@@ -47,11 +48,11 @@ public static class NavigationView
                             })
                             .Margin(0, 5, 0, 5)
                             .Height(40)
-                            .HorizontalAlignment(HorizontalAlignment.Stretch)
-                            .HorizontalContentAlignment(HorizontalAlignment.Left)
+                            .HorizontalAlignmentStretch()
+                            .HorizontalContentAlignmentLeft()
                             .Background(Brushes.Transparent)
                             .BorderBrush(Brushes.Transparent);
-                })]
+                    })]
                 )
             );
 
@@ -71,7 +72,7 @@ public static class NavigationView
 
             var header = StackPanel()
                 .Dock(Dock.Top)
-                .Orientation(Orientation.Horizontal)
+                .OrientationHorizontal()
                 .Height(50)
                 .Margin(5)
                 .Children(
@@ -86,12 +87,12 @@ public static class NavigationView
                     TextBlock()
                         .Text(pageTitle.AsSystemObservable())
                         .FontSize(21)
-                        .VerticalAlignment(VerticalAlignment.Center)
+                        .VerticalAlignmentCenter()
                         .Margin(20, 0, 0, 0)
                 );
 
             return SplitView()
-                .DisplayMode(SplitViewDisplayMode.Overlay)
+                .DisplayModeOverlay()
                 .UseLightDismissOverlayMode(true)
                 .OpenPaneLength(250)
                 .IsPaneOpen(drawerIsOpened.AsSystemObservable())

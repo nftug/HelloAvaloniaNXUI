@@ -11,8 +11,8 @@ public static class HomePageView
         StackPanel()
             .Margin(20)
             .Spacing(20)
-            .HorizontalAlignment(HorizontalAlignment.Center)
-            .VerticalAlignment(VerticalAlignment.Center)
+            .HorizontalAlignmentCenter()
+            .VerticalAlignmentCenter()
             .Children(
                 ClockView.Build(),
                 CounterView.Build()

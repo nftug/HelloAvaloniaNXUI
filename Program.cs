@@ -11,7 +11,7 @@ Window Build() =>
     Window()
         .Title("Hello Avalonia NXUI").Width(1024).Height(680)
         .WindowStartupLocation(WindowStartupLocation.CenterScreen)
-        .Styles(AppStyles.Build())
+        .Styles(new AppStyles())
         .Styles(new DialogHostStyles())
         .Styles(new MaterialIconStyles(null))
         .AppTrayIcon()

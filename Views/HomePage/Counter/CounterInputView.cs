@@ -37,7 +37,7 @@ public static class CounterInputView
                         .FormatString("0")
                         .IsEnabled(props.IsSetting.Select(v => !v).AsSystemObservable())
                         .Margin(5.0, 0.0)
-                        .VerticalAlignment(VerticalAlignment.Center),
+                        .VerticalAlignmentCenter(),
                     Button()
                         .Content("Set")
                         .OnClickHandler((_, _) => HandleSetInput())

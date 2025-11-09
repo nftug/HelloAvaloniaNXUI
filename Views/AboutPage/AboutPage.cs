@@ -8,20 +8,20 @@ public static class AboutPage
     private static StackPanel Build() =>
         StackPanel()
             .Margin(20)
-            .HorizontalAlignment(HorizontalAlignment.Center)
-            .VerticalAlignment(VerticalAlignment.Center)
+            .HorizontalAlignmentCenter()
+            .VerticalAlignmentCenter()
             .Children(
                 TextBlock()
                     .Text("Hello Avalonia NXUI")
                     .FontSize(32)
-                    .FontWeight(FontWeight.Bold)
-                    .HorizontalAlignment(HorizontalAlignment.Center)
+                    .FontWeightBold()
+                    .HorizontalAlignmentCenter()
                     .Margin(0, 0, 0, 30),
-                TextBlock()
+               TextBlock()
                     .Text("A sample application build with Avalonia UI and NXUI.")
-                    .TextWrapping(TextWrapping.Wrap)
+                    .TextWrappingWrap()
                     .FontSize(16)
-                    .HorizontalAlignment(HorizontalAlignment.Center)
+                    .HorizontalAlignmentCenter()
             );
 
     public static PageItem BuildPageItem() =>

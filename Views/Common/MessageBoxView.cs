@@ -18,8 +18,19 @@ public record MessageBoxProps(
 
 public static class MessageBoxView
 {
-    private static StackPanel Build(MessageBoxProps props, ICommand closeCommand) =>
-        StackPanel()
+    private static StackPanel Build(MessageBoxProps props, ICommand closeCommand)
+    {
+        var okButton = Button()
+            .Content(props.OkContent ?? "OK")
+            .OnClickHandler((_, _) => closeCommand.Execute(true))
+            .Width(80);
+
+        var cancelButton = Button()
+            .Content(props.CancelContent ?? "Cancel")
+            .OnClickHandler((_, _) => closeCommand.Execute(false))
+            .Width(80);
+
+        return StackPanel()
             .Margin(20)
             .Spacing(20)
             .MinWidth(300)
@@ -33,33 +44,20 @@ public static class MessageBoxView
                 TextBlock()
                     .Text(props.Message)
                     .FontSize(16)
-                    .TextWrapping(TextWrapping.Wrap)
+                    .TextWrappingWrap()
                     .Margin(0, 0, 0, 20),
                 StackPanel()
-                    .Orientation(Orientation.Horizontal)
-                    .HorizontalAlignment(HorizontalAlignment.Right)
+                    .OrientationHorizontal()
+                    .HorizontalAlignmentRight()
                     .Margin(0, 10, 0, 0)
                     .Spacing(10)
                     .Children(
                         props.Buttons == MessageBoxButton.OkCancel
-                            ? [
-                                Button()
-                                    .Content(props.CancelContent ?? "Cancel")
-                                    .OnClickHandler((_, _) => closeCommand.Execute(false))
-                                    .Width(80),
-                                Button()
-                                    .Content(props.OkContent ?? "OK")
-                                    .OnClickHandler((_, _) => closeCommand.Execute(true))
-                                    .Width(80)
-                            ]
-                            : [
-                                Button()
-                                    .Content(props.OkContent ?? "OK")
-                                    .OnClickHandler((_, _) => closeCommand.Execute(true))
-                                    .Width(80)
-                            ]
+                            ? [cancelButton, okButton]
+                            : [okButton]
                     )
             );
+    }
 
     public static async Task<bool> ShowAsync(MessageBoxProps props, CancellationToken ct = default)
     {

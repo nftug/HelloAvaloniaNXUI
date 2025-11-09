@@ -10,14 +10,14 @@ public static class CounterView
             return StackPanel()
                 .Margin(20)
                 .Spacing(10)
-                .HorizontalAlignment(HorizontalAlignment.Center)
-                .VerticalAlignment(VerticalAlignment.Center)
+                .HorizontalAlignmentCenter()
+                .VerticalAlignmentCenter()
                 .Children(
                     TextBlock()
                         .Text(counterState.Count.Select(c => $"Count: {c}").AsSystemObservable())
                         .FontSize(24)
                         .Margin(0, 0, 0, 20)
-                        .HorizontalAlignment(HorizontalAlignment.Center),
+                        .HorizontalAlignmentCenter(),
                     CounterInputView.Build(counterState),
                     CounterActionButtonView.Build(counterState),
                     FizzBuzzView.Build(counterState)

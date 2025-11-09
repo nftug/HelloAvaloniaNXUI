@@ -15,7 +15,7 @@ public static class CounterListPage
                 Label()
                     .MinWidth(40)
                     .FontSize(20)
-                    .FontWeight(FontWeight.Bold)
+                    .FontWeightBold()
                     .Content(count.AsSystemObservable().ToBinding()),
                 Button()
                     .Content("+")
@@ -74,12 +74,12 @@ public static class CounterListPage
                                         .IsEnabled(countersLength.Select(x => x > 0).AsSystemObservable())
                                         .Width(100)
                                         .Height(40)),
-                            TextBlock()
-                                .Text(countersSum.Select(sum => $"Counters Sum: {sum}").AsSystemObservable())
-                                .FontSize(24)
-                                .FontWeight(FontWeight.Bold)
-                                .HorizontalAlignment(HorizontalAlignment.Center)
-                        ),
+                                    TextBlock()
+                                        .Text(countersSum.Select(sum => $"Counters Sum: {sum}").AsSystemObservable())
+                                        .FontSize(24)
+                                        .FontWeightBold()
+                                        .HorizontalAlignmentCenter()
+                                ),
                     ScrollViewer()
                         .Dock(Dock.Bottom)
                         .Content(ItemsControl()
@@ -87,8 +87,8 @@ public static class CounterListPage
                             .ItemTemplateObservable<int>(BuildCounterItem)
                         )
                         .Margin(10)
-                        .VerticalScrollBarVisibility(ScrollBarVisibility.Auto)
-                        .HorizontalScrollBarVisibility(ScrollBarVisibility.Disabled)
+                        .VerticalScrollBarVisibilityAuto()
+                        .HorizontalScrollBarVisibilityDisabled()
                 );
         });
 

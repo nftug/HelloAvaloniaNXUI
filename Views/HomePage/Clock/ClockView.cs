@@ -29,7 +29,7 @@ public static class ClockView
             return TextBlock()
                 .FontSize(56)
                 .Margin(10)
-                .HorizontalAlignment(HorizontalAlignment.Center)
+                .HorizontalAlignmentCenter()
                 .Text(clockState.CurrentTime
                     .Select(t => t.ToString("HH:mm:ss"))
                     .AsSystemObservable());
