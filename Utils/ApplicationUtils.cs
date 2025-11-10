@@ -14,7 +14,7 @@ public static class ApplicationUtils
             ?? throw new InvalidOperationException("Main window is not available.");
     }
 
-    public static TControl GetControl<TControl>()
+    public static TControl GetControlFromWindow<TControl>()
         where TControl : Control
     {
         var window = GetMainWindow();

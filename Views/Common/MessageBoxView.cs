@@ -60,7 +60,7 @@ public static class MessageBoxView
 
     public static async Task<bool> ShowAsync(MessageBoxProps props, CancellationToken ct = default)
     {
-        var dialogHost = GetControl<DialogHost>();
+        var dialogHost = GetControlFromWindow<DialogHost>();
         var dialog = Build(props, dialogHost.CloseDialogCommand);
         var result = await DialogHost.Show(dialog);
 
