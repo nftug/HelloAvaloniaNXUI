@@ -5,7 +5,7 @@ public static class CounterView
     public static Control Build() =>
         WithReactive((disposables, container) =>
         {
-            var counterState = container.FindAncestorOfType<ContextView<CounterState>>()!.Value;
+            var state = ContextView<CounterState>.Require(container).Value;
 
             return StackPanel()
                 .Margin(20)
@@ -14,13 +14,13 @@ public static class CounterView
                 .VerticalAlignmentCenter()
                 .Children(
                     TextBlock()
-                        .Text(counterState.Count.Select(c => $"Count: {c}").AsSystemObservable())
+                        .Text(state.Count.Select(c => $"Count: {c}").AsSystemObservable())
                         .FontSize(24)
                         .Margin(0, 0, 0, 20)
                         .HorizontalAlignmentCenter(),
-                    CounterInputView.Build(counterState),
+                    CounterInputView.Build(state),
                     CounterActionButtonView.Build(),
-                    FizzBuzzView.Build(counterState)
+                    FizzBuzzView.Build(state)
                 );
         });
 }

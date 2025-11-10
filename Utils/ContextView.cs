@@ -21,10 +21,16 @@ public class ContextView<T> : ContentControl where T : class
     protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
     {
         base.OnDetachedFromVisualTree(e);
+
         Disposables?.Dispose();
+        Disposables = [];
         (Value as IDisposable)?.Dispose();
     }
 
-    public static T? Resolve(Control control)
-        => control.FindAncestorOfType<ContextView<T>>()?.Value;
+    public static ContextView<T>? Resolve(Control control)
+        => control.FindAncestorOfType<ContextView<T>>();
+
+    public static ContextView<T> Require(Control control)
+        => control.FindAncestorOfType<ContextView<T>>()
+           ?? throw new InvalidOperationException($"ContextView<{typeof(T).Name}> not found in visual tree.");
 }

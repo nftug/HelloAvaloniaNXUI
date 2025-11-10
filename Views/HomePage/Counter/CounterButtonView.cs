@@ -8,8 +8,8 @@ public static class CounterActionButtonView
     public static Control Build() =>
         WithReactive((disposables, control) =>
         {
-            var context = control.FindAncestorOfType<ContextView<CounterState>>()!;
-            var (state, ctxDisposables) = (context.Value, context.Disposables!);
+            var context = ContextView<CounterState>.Require(control);
+            var (state, ctxDisposables) = (context.Value, context.Disposables);
 
             var count = state.Count.ToReactiveValue(disposables);
 
