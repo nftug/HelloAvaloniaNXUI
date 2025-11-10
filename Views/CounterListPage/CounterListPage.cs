@@ -28,7 +28,7 @@ public static class CounterListPage
             );
 
     public static Control Build() =>
-        WithReactive((disposables) =>
+        WithReactive((disposables, _) =>
         {
             var counters = new ObservableCollection<ReactiveProperty<int>>(
                 Enumerable.Range(0, 5).Select(i => new ReactiveProperty<int>(i).AddTo(disposables))
@@ -54,7 +54,7 @@ public static class CounterListPage
                 .Margin(10)
                 .Children(
                     StackPanel()
-                        .Dock(Dock.Top)
+                        .DockTop()
                         .Spacing(15)
                         .Margin(0, 0, 0, 10)
                         .Children(
@@ -81,7 +81,7 @@ public static class CounterListPage
                                         .HorizontalAlignmentCenter()
                                 ),
                     ScrollViewer()
-                        .Dock(Dock.Bottom)
+                        .DockBottom()
                         .Content(ItemsControl()
                             .ItemsSource(counters)
                             .ItemTemplateObservable<int>(BuildCounterItem)

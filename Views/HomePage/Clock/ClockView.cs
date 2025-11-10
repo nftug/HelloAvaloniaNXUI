@@ -23,7 +23,7 @@ public static class ClockHooks
 public static class ClockView
 {
     public static Control Build() =>
-        WithReactive(disposables =>
+        WithReactive((disposables, _) =>
         {
             var clockState = ClockHooks.UseClock(disposables);
             return TextBlock()

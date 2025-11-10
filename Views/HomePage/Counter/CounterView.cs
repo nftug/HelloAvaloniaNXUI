@@ -3,9 +3,9 @@ namespace HelloAvaloniaNXUI.Views.HomePage.Counter;
 public static class CounterView
 {
     public static Control Build() =>
-        WithReactive((disposables) =>
+        WithReactive((disposables, container) =>
         {
-            var counterState = CounterHooks.UseDelayedCounter(disposables);
+            var counterState = container.FindAncestorOfType<ContextView<CounterState>>()!.Value;
 
             return StackPanel()
                 .Margin(20)
@@ -19,7 +19,7 @@ public static class CounterView
                         .Margin(0, 0, 0, 20)
                         .HorizontalAlignmentCenter(),
                     CounterInputView.Build(counterState),
-                    CounterActionButtonView.Build(counterState),
+                    CounterActionButtonView.Build(),
                     FizzBuzzView.Build(counterState)
                 );
         });

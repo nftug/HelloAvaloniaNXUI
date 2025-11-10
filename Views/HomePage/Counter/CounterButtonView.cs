@@ -5,29 +5,32 @@ namespace HelloAvaloniaNXUI.Views.HomePage.Counter;
 
 public static class CounterActionButtonView
 {
-    public static Control Build(CounterState props) =>
-        WithReactive((disposables) =>
+    public static Control Build() =>
+        WithReactive((disposables, control) =>
         {
-            var count = props.Count.ToReactiveValue(disposables);
+            var context = control.FindAncestorOfType<ContextView<CounterState>>()!;
+            var (state, ctxDisposables) = (context.Value, context.Disposables!);
 
-            var canIncrement = props.IsSetting.Select(v => !v);
+            var count = state.Count.ToReactiveValue(disposables);
 
-            var canDecrement = props.IsSetting
+            var canIncrement = state.IsSetting.Select(v => !v);
+
+            var canDecrement = state.IsSetting
                 .CombineLatest(count, (isSetting, count) => !isSetting && count > 0);
 
-            var canReset = props.IsSetting
+            var canReset = state.IsSetting
                 .CombineLatest(count, (isSetting, count) => !isSetting && count != 0);
 
             async void HandleIncrement() =>
-                await InvokeAsync(disposables,
-                    ct => props.SetCountAsync(count.CurrentValue + 1, TimeSpan.FromSeconds(0.1), ct));
+                await InvokeAsync(ctxDisposables,
+                    ct => state.SetCountAsync(count.CurrentValue + 1, TimeSpan.FromSeconds(0.1), ct));
 
             async void HandleDecrement() =>
-                await InvokeAsync(disposables,
-                    ct => props.SetCountAsync(count.CurrentValue - 1, TimeSpan.FromSeconds(0.1), ct));
+                await InvokeAsync(ctxDisposables,
+                    ct => state.SetCountAsync(count.CurrentValue - 1, TimeSpan.FromSeconds(0.1), ct));
 
             async void HandleReset() =>
-                await InvokeAsync(disposables,
+                await InvokeAsync(ctxDisposables,
                     async ct =>
                     {
                         var ans = await MessageBoxView.ShowAsync(
@@ -37,7 +40,7 @@ public static class CounterActionButtonView
 
                         if (!ans) return;
 
-                        await props.SetCountAsync(0, TimeSpan.FromSeconds(3.0), ct);
+                        await state.SetCountAsync(0, TimeSpan.FromSeconds(3.0), ct);
 
                         NotificationView.Show(
                             "Counter Reset",

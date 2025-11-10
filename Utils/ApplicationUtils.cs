@@ -18,7 +18,7 @@ public static class ApplicationUtils
         where TControl : Control
     {
         var window = GetMainWindow();
-        return window.GetVisualDescendants().OfType<TControl>().FirstOrDefault()
+        return window.FindDescendantOfType<TControl>()
             ?? throw new InvalidOperationException($"Control of type {typeof(TControl).Name} not found.");
     }
 
@@ -40,8 +40,8 @@ public static class ApplicationUtils
         }
     }
 
-    public static ContentControl WithReactive<TControl>(Func<CompositeDisposable, TControl> onAttached)
-        where TControl : Visual, new()
+    public static Control WithReactive<TControl>(Func<CompositeDisposable, ContentControl, TControl> onAttached)
+        where TControl : Control
     {
         CompositeDisposable? disposables = null;
         var container = new ContentControl();
@@ -49,7 +49,7 @@ public static class ApplicationUtils
         container.AttachedToVisualTree += (_, _) =>
         {
             disposables = [];
-            container.Content = onAttached(disposables);
+            container.Content = onAttached(disposables, container);
         };
 
         container.DetachedFromVisualTree += (_, _) =>

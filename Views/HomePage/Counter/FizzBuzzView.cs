@@ -3,7 +3,7 @@ namespace HelloAvaloniaNXUI.Views.HomePage.Counter;
 public static class FizzBuzzView
 {
     public static Control Build(CounterState props) =>
-        WithReactive((disposables) =>
+        WithReactive((disposables, _) =>
         {
             var inputText = new ReactiveProperty<string?>().AddTo(disposables);
 

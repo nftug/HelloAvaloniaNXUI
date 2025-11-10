@@ -3,7 +3,7 @@ namespace HelloAvaloniaNXUI.Views.HomePage.Counter;
 public static class CounterInputView
 {
     public static Control Build(CounterState props) =>
-        WithReactive((disposables) =>
+        WithReactive((disposables, control) =>
         {
             var count = props.Count.ToReactiveValue(disposables);
 
