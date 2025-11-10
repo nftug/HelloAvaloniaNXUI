@@ -27,18 +27,7 @@ public static class NavigationView
                             .ToReactiveValue(disposables);
 
                         return ToggleButton()
-                            .Content(
-                                StackPanel()
-                                    .OrientationHorizontal()
-                                    .Spacing(10)
-                                    .Children(
-                                        new MaterialIcon() { Kind = page.Value.Icon },
-                                        TextBlock()
-                                            .Text(page.Value.Title)
-                                            .FontSize(16)
-                                            .VerticalAlignmentCenter()
-                                    )
-                            )
+                            .Content(MaterialIconLabel.Build(page.Value.Icon, page.Value.Title))
                             .IsChecked(isSelected.AsSystemObservable())
                             .OnIsCheckedChangedHandler((ctl, _) => ctl.IsChecked = isSelected.CurrentValue)
                             .OnClickHandler((_, _) =>

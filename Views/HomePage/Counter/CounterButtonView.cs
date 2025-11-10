@@ -39,11 +39,11 @@ public static class CounterActionButtonView
 
                         await props.SetCountAsync(0, TimeSpan.FromSeconds(3.0), ct);
 
-                        ShowNotification(new Notification(
+                        NotificationView.Show(
                             "Counter Reset",
                             "The counter has been reset to zero.",
                             NotificationType.Information
-                        ));
+                        );
                     });
 
             return Grid()

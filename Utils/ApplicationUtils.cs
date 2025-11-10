@@ -1,5 +1,3 @@
-using Avalonia.Controls.Notifications;
-
 namespace HelloAvaloniaNXUI.Utils;
 
 public static class ApplicationUtils
@@ -22,12 +20,6 @@ public static class ApplicationUtils
         var window = GetMainWindow();
         return window.GetVisualDescendants().OfType<TControl>().FirstOrDefault()
             ?? throw new InvalidOperationException($"Control of type {typeof(TControl).Name} not found.");
-    }
-
-    public static void ShowNotification(Notification notification)
-    {
-        var notificationManager = GetControl<WindowNotificationManager>();
-        notificationManager.Show(notification);
     }
 
     public static async Task InvokeAsync(CompositeDisposable disposables, Func<CancellationToken, Task> work)
