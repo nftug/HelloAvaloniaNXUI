@@ -40,7 +40,7 @@ public static class ApplicationUtils
         }
     }
 
-    public static Control WithReactive<TControl>(Func<CompositeDisposable, ContentControl, TControl> onAttached)
+    public static Control WithReactive<TControl>(Func<CompositeDisposable, Control, TControl> onAttached)
         where TControl : Control
     {
         CompositeDisposable? disposables = null;

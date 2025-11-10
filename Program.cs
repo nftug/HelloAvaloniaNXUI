@@ -16,22 +16,21 @@ Window Build() =>
         .Styles(new MaterialIconStyles(null))
         .AppTrayIcon()
         .Content(
-            Grid()
-                .Children(
-                    CounterContextProvider.Build(
-                        NavigationView.Build(new(
-                            new Dictionary<string, PageItem>
-                            {
-                                ["/home"] = HomePageView.BuildPageItem(),
-                                ["/counter-list"] = CounterListPage.BuildPageItem(),
-                                ["/about"] = AboutPage.BuildPageItem(),
-                            },
-                            "/home"
-                        ))
-                    ),
-                    WindowNotificationManager().PositionBottomCenter().MaxItems(1),
-                    new DialogHost()
-                )
+            Grid().Children(
+                CounterContextProvider.Build(
+                    NavigationView.Build(new(
+                        new Dictionary<string, PageItem>
+                        {
+                            ["/home"] = HomePageView.BuildPageItem(),
+                            ["/counter-list"] = CounterListPage.BuildPageItem(),
+                            ["/about"] = AboutPage.BuildPageItem(),
+                        },
+                        "/home"
+                    ))
+                ),
+                WindowNotificationManager().PositionBottomCenter().MaxItems(1),
+                new DialogHost()
+            )
         );
 
 AppBuilder.Configure<Application>()
