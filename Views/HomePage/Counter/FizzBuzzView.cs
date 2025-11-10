@@ -2,12 +2,13 @@ namespace HelloAvaloniaNXUI.Views.HomePage.Counter;
 
 public static class FizzBuzzView
 {
-    public static Control Build(CounterState props) =>
-        WithReactive((disposables, _) =>
+    public static Control Build() =>
+        WithReactive((disposables, control) =>
         {
+            var (state, ctxDisposables) = Context<CounterState>.Require(control);
             var inputText = new ReactiveProperty<string?>().AddTo(disposables);
 
-            return props.Count
+            return state.Count
                 .Select(count => count switch
                 {
                     0 => null,

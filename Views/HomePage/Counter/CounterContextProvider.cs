@@ -6,6 +6,6 @@ public static class CounterContextProvider
         WithReactive((disposables, _) =>
         {
             var counterState = CounterHooks.UseDelayedCounter(disposables);
-            return new ContextView<CounterState>(counterState, content);
+            return new Context<CounterState>(counterState, content);
         });
 }

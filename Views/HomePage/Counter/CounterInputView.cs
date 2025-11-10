@@ -2,16 +2,18 @@ namespace HelloAvaloniaNXUI.Views.HomePage.Counter;
 
 public static class CounterInputView
 {
-    public static Control Build(CounterState props) =>
+    public static Control Build() =>
         WithReactive((disposables, control) =>
         {
-            var count = props.Count.ToReactiveValue(disposables);
+            var (state, ctxDisposables) = Context<CounterState>.Require(control);
+
+            var count = state.Count.ToReactiveValue(disposables);
 
             var inputCount = new ReactiveProperty<decimal?>(count.CurrentValue).AddTo(disposables);
 
             count.Subscribe(c => inputCount.Value = c).AddTo(disposables);
 
-            var canSetInput = props.IsSetting
+            var canSetInput = state.IsSetting
                 .CombineLatest(
                     count,
                     inputCount,
@@ -19,11 +21,11 @@ public static class CounterInputView
                 );
 
             async void HandleSetInput() =>
-                await InvokeAsync(disposables,
+                await InvokeAsync(ctxDisposables,
                     async ct =>
                     {
                         if (inputCount.Value is { } value)
-                            await props.SetCountAsync((int)value, TimeSpan.FromSeconds(0.5), ct);
+                            await state.SetCountAsync((int)value, TimeSpan.FromSeconds(0.5), ct);
                     });
 
             return Grid()
@@ -35,7 +37,7 @@ public static class CounterInputView
                         .Minimum(0)
                         .Maximum(10000)
                         .FormatString("0")
-                        .IsEnabled(props.IsSetting.Select(v => !v).AsSystemObservable())
+                        .IsEnabled(state.IsSetting.Select(v => !v).AsSystemObservable())
                         .Margin(5.0, 0.0)
                         .VerticalAlignmentCenter(),
                     Button()

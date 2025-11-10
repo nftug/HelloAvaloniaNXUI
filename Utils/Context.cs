@@ -1,12 +1,12 @@
 namespace HelloAvaloniaNXUI.Utils;
 
-public class ContextView<T> : ContentControl where T : class
+public class Context<T> : ContentControl where T : class
 {
     public T Value { get; }
 
     public CompositeDisposable Disposables { get; private set; } = [];
 
-    public ContextView(T value, Control content)
+    public Context(T value, Control content)
     {
         Value = value;
         Content = content;
@@ -22,15 +22,21 @@ public class ContextView<T> : ContentControl where T : class
     {
         base.OnDetachedFromVisualTree(e);
 
-        Disposables?.Dispose();
+        Disposables.Dispose();
         Disposables = [];
         (Value as IDisposable)?.Dispose();
     }
 
-    public static ContextView<T>? Resolve(Control control)
-        => control.FindAncestorOfType<ContextView<T>>();
+    public static (T? value, CompositeDisposable? disposables) Resolve(Control control)
+    {
+        var context = control.FindAncestorOfType<Context<T>>();
+        return (context?.Value, context?.Disposables);
+    }
 
-    public static ContextView<T> Require(Control control)
-        => control.FindAncestorOfType<ContextView<T>>()
+    public static (T value, CompositeDisposable disposables) Require(Control control)
+    {
+        var context = control.FindAncestorOfType<Context<T>>()
            ?? throw new InvalidOperationException($"ContextView<{typeof(T).Name}> not found in visual tree.");
+        return (context.Value, context.Disposables);
+    }
 }

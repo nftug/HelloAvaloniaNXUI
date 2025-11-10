@@ -5,7 +5,7 @@ public static class CounterView
     public static Control Build() =>
         WithReactive((disposables, container) =>
         {
-            var state = ContextView<CounterState>.Require(container).Value;
+            var (state, ctxDisposables) = Context<CounterState>.Require(container);
 
             return StackPanel()
                 .Margin(20)
@@ -18,9 +18,9 @@ public static class CounterView
                         .FontSize(24)
                         .Margin(0, 0, 0, 20)
                         .HorizontalAlignmentCenter(),
-                    CounterInputView.Build(state),
+                    CounterInputView.Build(),
                     CounterActionButtonView.Build(),
-                    FizzBuzzView.Build(state)
+                    FizzBuzzView.Build()
                 );
         });
 }
