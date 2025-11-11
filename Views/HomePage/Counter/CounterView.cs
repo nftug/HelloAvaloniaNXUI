@@ -5,7 +5,7 @@ public static class CounterView
     public static Control Build() =>
         WithReactive((disposables, container) =>
         {
-            var (state, ctxDisposables) = Context<CounterState>.Require(container);
+            var (state, ctxDisposables) = CounterContext.Require(container);
 
             return StackPanel()
                 .Margin(20)

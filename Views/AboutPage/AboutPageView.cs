@@ -3,7 +3,7 @@ using Material.Icons;
 
 namespace HelloAvaloniaNXUI.Views.AboutPage;
 
-public static class AboutPage
+public static class AboutPageView
 {
     private static StackPanel Build() =>
         StackPanel()

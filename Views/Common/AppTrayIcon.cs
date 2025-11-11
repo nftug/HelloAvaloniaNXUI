@@ -1,10 +1,8 @@
-using System.ComponentModel;
-
 namespace HelloAvaloniaNXUI.Views.Common;
 
-public static class TrayIconExtensions
+public static class AppTrayIcon
 {
-    public static TrayIcon BuildTrayIcon()
+    public static TrayIcon Build()
     {
         var showCommand = new ReactiveCommand();
         showCommand.Subscribe(_ =>
@@ -37,44 +35,15 @@ public static class TrayIconExtensions
             NativeMenuItem().Header("Exit").Command(exitCommand)
         };
 
-        return new TrayIcon
+        var trayIcon = new Avalonia.Controls.TrayIcon
         {
             ToolTipText = "Hello Avalonia NXUI",
             Icon = new WindowIcon(new Bitmap(NXUI.AssetLoader.Open(new Uri("avares://HelloAvaloniaNXUI/Assets/tray_icon.ico")))),
             Menu = nativeMenu
         };
-    }
 
-    public static Window AppTrayIcon(this Window window)
-    {
-        window.Loaded += async (_, _) =>
-        {
-            if (!FileLockSingleInstanceGuard.TryAcquireLock())
-            {
-                await MessageBoxView.ShowAsync(
-                    new("Application Already Running",
-                        "Another instance of this application is already running.",
-                        MessageBoxButton.Ok
-                    ));
-                GetApplicationLifetime().Shutdown();
-            }
-            else
-            {
-                var trayIcon = BuildTrayIcon();
-                Avalonia.Controls.TrayIcon.SetIcons(Avalonia.Application.Current!, [trayIcon]);
-            }
-        };
+        trayIcon.Clicked += (_, _) => showCommand.Execute(Unit.Default);
 
-        static void HandleClosingRequested(object? sender, CancelEventArgs e)
-        {
-            if (sender is not Window win) return;
-            e.Cancel = true;
-            win.Hide();
-        }
-
-        window.Closing += HandleClosingRequested;
-        GetApplicationLifetime().ShutdownRequested += (_, _) => FileLockSingleInstanceGuard.ReleaseLock();
-
-        return window;
+        return trayIcon;
     }
 }

@@ -56,8 +56,7 @@ public static class NavigationView
                 .AddTo(disposables);
 
             var pageTitle = selectedKey
-                .Select(key => props.Pages.TryGetValue(key, out var page) ? page.Title : "Unknown")
-                .ToReactiveValue(disposables, string.Empty);
+                .Select(key => props.Pages.TryGetValue(key, out var page) ? page.Title : "Unknown");
 
             var header = StackPanel()
                 .DockTop()

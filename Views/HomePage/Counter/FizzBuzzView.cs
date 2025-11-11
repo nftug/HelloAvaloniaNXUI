@@ -5,7 +5,7 @@ public static class FizzBuzzView
     public static Control Build() =>
         WithReactive((disposables, control) =>
         {
-            var (state, ctxDisposables) = Context<CounterState>.Require(control);
+            var (state, ctxDisposables) = CounterContext.Require(control);
             var inputText = new ReactiveProperty<string?>().AddTo(disposables);
 
             return state.Count

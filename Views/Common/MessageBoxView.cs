@@ -20,14 +20,16 @@ public static class MessageBoxView
 {
     private static StackPanel Build(MessageBoxProps props, ICommand closeCommand)
     {
-        Control CreateButton(object content, Action onClick) =>
+        Control CreateButton(object content, object ret) =>
             Button()
                 .Content(content)
-                .OnClickHandler((_, _) => onClick())
-                .Width(80);
+                .OnClickHandler((_, _) => closeCommand.Execute(ret))
+                .MinWidth(80)
+                .MaxWidth(120)
+                .Height(35);
 
-        var okButton = CreateButton(props.OkContent ?? "OK", () => closeCommand.Execute(true));
-        var cancelButton = CreateButton(props.CancelContent ?? "Cancel", () => closeCommand.Execute(false));
+        var okButton = CreateButton(props.OkContent ?? "OK", true);
+        var cancelButton = CreateButton(props.CancelContent ?? "Cancel", false);
 
         return StackPanel()
             .Margin(20)

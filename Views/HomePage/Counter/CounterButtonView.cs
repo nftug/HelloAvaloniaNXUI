@@ -8,7 +8,7 @@ public static class CounterActionButtonView
     public static Control Build() =>
         WithReactive((disposables, control) =>
         {
-            var (state, ctxDisposables) = Context<CounterState>.Require(control);
+            var (state, ctxDisposables) = CounterContext.Require(control);
 
             var count = state.Count.ToReactiveValue(disposables);
 

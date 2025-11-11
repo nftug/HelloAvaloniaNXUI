@@ -3,7 +3,7 @@ using Material.Icons;
 
 namespace HelloAvaloniaNXUI.Views.CounterListPage;
 
-public static class CounterListPage
+public static class CounterListPageView
 {
     private static StackPanel BuildCounterItem(ReactiveProperty<int> count) =>
         StackPanel()
