@@ -1,7 +1,6 @@
 using DialogHostAvalonia;
 using HelloAvaloniaNXUI.Views;
 using HelloAvaloniaNXUI.Views.Common;
-using Material.Icons.Avalonia;
 
 namespace HelloAvaloniaNXUI;
 
@@ -13,7 +12,7 @@ public static class MainWindow
             .WindowStartupLocationCenterScreen()
             .Styles(new AppStyles())
             .Styles(new DialogHostStyles())
-            .Styles(new MaterialIconStyles(null))
+            // .Styles(new MaterialIconStyles(null))
             .Content(MainView.Build())
             .Init();
 

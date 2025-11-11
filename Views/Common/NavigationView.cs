@@ -1,9 +1,8 @@
 using Material.Icons;
-using Material.Icons.Avalonia;
 
 namespace HelloAvaloniaNXUI.Views.Common;
 
-public sealed record PageItem(MaterialIconKind Icon, string Title, Control View);
+public sealed record PageItem(MaterialIconKind IconKind, string Title, Control View);
 
 public sealed record NavigationViewProps(
     IReadOnlyDictionary<string, PageItem> Pages, string InitialPage, Action<string>? OnCurrentPageChanged = null);
@@ -27,7 +26,8 @@ public static class NavigationView
                             .ToReactiveValue(disposables);
 
                         return ToggleButton()
-                            .Content(MaterialIconLabel.Build(page.Value.Icon, page.Value.Title))
+                            .Content(MaterialIconLabel.Build(page.Value.IconKind, page.Value.Title))
+                            .FontSize(16)
                             .IsChecked(isSelected.AsSystemObservable())
                             .OnIsCheckedChangedHandler((ctl, _) => ctl.IsChecked = isSelected.CurrentValue)
                             .OnClickHandler((_, _) =>
@@ -65,10 +65,10 @@ public static class NavigationView
                 .Margin(5)
                 .Children(
                     Button()
-                        .Content(new MaterialIcon() { Kind = MaterialIconKind.Menu })
+                        .Content(new CustomIcon(MaterialIconKind.Menu))
                         .Width(50)
                         .Height(50)
-                        .FontSize(18)
+                        .FontSize(22)
                         .Background(Brushes.Transparent)
                         .BorderBrush(Brushes.Transparent)
                         .OnClickHandler((_, _) => drawerIsOpened.Value = true),
