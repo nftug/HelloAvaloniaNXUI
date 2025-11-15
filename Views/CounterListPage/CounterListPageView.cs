@@ -46,8 +46,10 @@ public static class CounterListPageView
 
             void handleClickRemove()
             {
-                if (counters.Count > 0)
-                    counters.RemoveAt(counters.Count - 1);
+                if (counters.Count == 0) return;
+                var last = counters[^1];
+                counters.RemoveAt(counters.Count - 1);
+                last.Dispose();
             }
 
             return DockPanel()
@@ -73,18 +75,20 @@ public static class CounterListPageView
                                         .OnClickHandler((_, _) => handleClickRemove())
                                         .IsEnabled(countersLength.Select(x => x > 0).AsSystemObservable())
                                         .Width(100)
-                                        .Height(40)),
-                                    TextBlock()
-                                        .Text(countersSum.Select(sum => $"Counters Sum: {sum}").AsSystemObservable())
-                                        .FontSize(24)
-                                        .FontWeightBold()
-                                        .HorizontalAlignmentCenter()
+                                        .Height(40)
                                 ),
+                            TextBlock()
+                                .Text(countersSum.Select(sum => $"Counters Sum: {sum}").AsSystemObservable())
+                                .FontSize(24)
+                                .FontWeightBold()
+                                .HorizontalAlignmentCenter()
+                        ),
                     ScrollViewer()
                         .DockBottom()
-                        .Content(ItemsControl()
-                            .ItemsSource(counters)
-                            .ItemTemplateObservable<int>(BuildCounterItem)
+                        .Content(
+                            ItemsControl()
+                                .ItemsSource(counters)
+                                .ItemTemplateObservable<int>(BuildCounterItem)
                         )
                         .Margin(10)
                         .VerticalScrollBarVisibilityAuto()
