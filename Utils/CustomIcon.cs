@@ -1,7 +1,7 @@
 using Material.Icons;
 using Material.Icons.Avalonia;
 
-namespace HelloAvaloniaNXUI;
+namespace HelloAvaloniaNXUI.Utils;
 
 public class CustomIcon : PathIcon
 {
@@ -23,7 +23,7 @@ public class CustomIcon : PathIcon
         AffectsRender<CustomIcon>(ForegroundProperty, DataProperty, SourceProperty);
     }
 
-    public CustomIcon(MaterialIconKind iconKind) : this()
+    public CustomIcon(MaterialIconKind iconKind)
     {
         Source = new MaterialIcon { Kind = iconKind };
     }
@@ -32,7 +32,7 @@ public class CustomIcon : PathIcon
     {
         base.OnPropertyChanged(e);
 
-        if (e.Property == ForegroundProperty)
+        if (e.Property == Avalonia.Controls.PathIcon.ForegroundProperty)
         {
             _geometryDrawing.Brush = Foreground;
             if (_imageSource is not null)

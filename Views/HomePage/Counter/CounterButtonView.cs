@@ -1,5 +1,6 @@
 using Avalonia.Controls.Notifications;
 using HelloAvaloniaNXUI.Views.Common;
+using Material.Icons;
 
 namespace HelloAvaloniaNXUI.Views.HomePage.Counter;
 
@@ -54,14 +55,14 @@ public static class CounterActionButtonView
                 .RowDefinitions("Auto, Auto")
                 .Children(
                     Button()
-                        .Content("Increment")
+                        .Content(MaterialIconLabel.Build(MaterialIconKind.Plus, "Increment"))
                         .OnClickHandler((_, _) => HandleIncrement())
                         .IsEnabled(canIncrement.AsSystemObservable())
                         .Margin(5.0, 0.0)
                         .HorizontalAlignmentStretch()
                         .Column(0),
                     Button()
-                        .Content("Decrement")
+                        .Content(MaterialIconLabel.Build(MaterialIconKind.Minus, "Decrement"))
                         .OnClickHandler((_, _) => HandleDecrement())
                         .IsEnabled(canDecrement.AsSystemObservable())
                         .Margin(5.0, 0.0)
