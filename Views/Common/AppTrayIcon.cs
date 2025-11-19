@@ -35,10 +35,12 @@ public static class AppTrayIcon
             NativeMenuItem().Header("Exit").Command(exitCommand)
         };
 
-        var trayIcon = new Avalonia.Controls.TrayIcon
+        using var iconStream = EmbeddedResourceProvider.GetFileStream("Assets/tray_icon.ico");
+
+        var trayIcon = new TrayIcon
         {
             ToolTipText = "Hello Avalonia NXUI",
-            Icon = new WindowIcon(new Bitmap(NXUI.AssetLoader.Open(new Uri("avares://HelloAvaloniaNXUI/Assets/tray_icon.ico")))),
+            Icon = new WindowIcon(new Bitmap(iconStream)),
             Menu = nativeMenu
         };
 
