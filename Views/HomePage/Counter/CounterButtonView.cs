@@ -7,7 +7,7 @@ namespace HelloAvaloniaNXUI.Views.HomePage.Counter;
 public static class CounterActionButtonView
 {
     public static Control Build() =>
-        WithReactive((disposables, control) =>
+        WithLifecycle((disposables, control) =>
         {
             var (state, ctxDisposables) = CounterContext.Require(control);
 

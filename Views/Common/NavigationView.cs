@@ -16,7 +16,7 @@ public sealed record DrawerViewProps(
 public static class NavigationView
 {
     private static Visual BuildDrawer(DrawerViewProps props) =>
-        WithReactive((disposables, _) =>
+        WithLifecycle((disposables, _) =>
             StackPanel()
                 .Margin(10)
                 .Children(
@@ -46,7 +46,7 @@ public static class NavigationView
             );
 
     public static Control Build(NavigationViewProps props) =>
-        WithReactive((disposables, _) =>
+        WithLifecycle((disposables, _) =>
         {
             var drawerIsOpened = new ReactiveProperty<bool>(false).AddTo(disposables);
             var selectedKey = new ReactiveProperty<string>(props.InitialPage).AddTo(disposables);

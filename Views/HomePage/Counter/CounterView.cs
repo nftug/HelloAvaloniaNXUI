@@ -3,7 +3,7 @@ namespace HelloAvaloniaNXUI.Views.HomePage.Counter;
 public static class CounterView
 {
     public static Control Build() =>
-        WithReactive((disposables, container) =>
+        WithLifecycle((disposables, container) =>
         {
             var (state, ctxDisposables) = CounterContext.Require(container);
 

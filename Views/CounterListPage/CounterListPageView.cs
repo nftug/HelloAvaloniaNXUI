@@ -28,7 +28,7 @@ public static class CounterListPageView
             );
 
     public static Control Build() =>
-        WithReactive((disposables, _) =>
+        WithLifecycle((disposables, _) =>
         {
             var counters = new ObservableCollection<ReactiveProperty<int>>(
                 Enumerable.Range(0, 5).Select(i => new ReactiveProperty<int>(i).AddTo(disposables))
