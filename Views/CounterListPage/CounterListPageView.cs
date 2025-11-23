@@ -5,8 +5,16 @@ namespace HelloAvaloniaNXUI.Views.CounterListPage;
 
 public static class CounterListPageView
 {
-    private static StackPanel BuildCounterItem(ReactiveProperty<int> count) =>
-        StackPanel()
+    public record CounterState(Guid Id, int Value);
+
+    private static Control BuildCounterItem(ObservableList<CounterState> items, CounterState item)
+    {
+        var index = items.IndexOf(item);
+        var itemValue = Observable.EveryValueChanged(items[index], v => v.Value);
+
+        void UpdateItemValue(int value) => items[index] = item with { Value = value };
+
+        return StackPanel()
             .OrientationHorizontal()
             .Spacing(12)
             .HorizontalAlignmentCenter()
@@ -16,40 +24,39 @@ public static class CounterListPageView
                     .MinWidth(40)
                     .FontSize(20)
                     .FontWeightBold()
-                    .Content(count.AsSystemObservable().ToBinding()),
+                    .Content(itemValue.AsSystemObservable().ToBinding()),
                 Button()
                     .Content("+")
-                    .OnClickHandler((_, e) => count.Value++)
+                    .OnClickHandler((_, e) => UpdateItemValue(item.Value + 1))
                     .Width(40),
                 Button()
                     .Content("-")
-                    .OnClickHandler((_, e) => count.Value--)
+                    .OnClickHandler((_, e) => UpdateItemValue(item.Value - 1))
                     .Width(40)
             );
+    }
 
     public static Control Build() =>
         WithLifecycle((disposables, _) =>
         {
-            var counters = new ObservableCollection<ReactiveProperty<int>>(
-                Enumerable.Range(0, 5).Select(i => new ReactiveProperty<int>(i).AddTo(disposables))
+            var counters = new ObservableList<CounterState>(
+                Enumerable.Range(0, 5).Select(i => new CounterState(Guid.NewGuid(), i))
             );
 
-            var countersLength = counters.ObservePropertyChanged(c => c.Count);
+            var countersLength = counters.ObserveCountChanged();
 
-            var countersSum = counters.MapFromCollectionChanged(items => items.Sum());
+            var countersSum = counters.ObserveCollectionChanged(c => c.Sum(item => item.Value));
 
-            void handleClickAdd()
+            void HandleClickAdd()
             {
                 var nextValue = counters.Count > 0 ? counters[^1].Value + 1 : 0;
-                counters.Add(new ReactiveProperty<int>(nextValue).AddTo(disposables));
+                counters.Add(new CounterState(Guid.NewGuid(), nextValue));
             }
 
-            void handleClickRemove()
+            void HandleClickRemove()
             {
                 if (counters.Count == 0) return;
-                var last = counters[^1];
                 counters.RemoveAt(counters.Count - 1);
-                last.Dispose();
             }
 
             return DockPanel()
@@ -67,12 +74,12 @@ public static class CounterListPageView
                                 .Children(
                                     Button()
                                         .Content("Add Counter")
-                                        .OnClickHandler((_, _) => handleClickAdd())
+                                        .OnClickHandler((_, _) => HandleClickAdd())
                                         .Width(100)
                                         .Height(40),
                                     Button()
                                         .Content("Remove Last")
-                                        .OnClickHandler((_, _) => handleClickRemove())
+                                        .OnClickHandler((_, _) => HandleClickRemove())
                                         .IsEnabled(countersLength.Select(x => x > 0).AsSystemObservable())
                                         .Width(100)
                                         .Height(40)
@@ -87,8 +94,8 @@ public static class CounterListPageView
                         .DockBottom()
                         .Content(
                             ItemsControl()
-                                .ItemsSource(counters)
-                                .ItemTemplateObservable<int>(BuildCounterItem)
+                                .ItemsSource(counters.ToNotifyCollectionChangedSlim())
+                                .ItemTemplate<CounterState>(v => BuildCounterItem(counters, v))
                         )
                         .Margin(10)
                         .VerticalScrollBarVisibilityAuto()

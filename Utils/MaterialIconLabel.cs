@@ -1,4 +1,5 @@
 using Material.Icons;
+using Material.Icons.Avalonia;
 
 namespace HelloAvaloniaNXUI.Utils;
 
@@ -10,5 +11,5 @@ public static class MaterialIconLabel
                 StackPanel()
                     .OrientationHorizontal()
                     .Spacing(10)
-                    .Children(new CustomIcon(iconKind), TextBlock().Text(text)));
+                    .Children(new MaterialIcon() { Kind = iconKind }, TextBlock().Text(text)));
 }

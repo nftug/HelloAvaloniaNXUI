@@ -1,4 +1,5 @@
 global using HelloAvaloniaNXUI.Utils;
+global using ObservableCollections;
 global using R3;
 global using static HelloAvaloniaNXUI.Utils.ApplicationUtils;
 // global using static HelloAvaloniaNXUI.Utils.Builder;
