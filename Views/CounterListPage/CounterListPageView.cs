@@ -90,16 +90,18 @@ public static class CounterListPageView
                                 .FontWeightBold()
                                 .HorizontalAlignmentCenter()
                         ),
-                    ScrollViewer()
-                        .DockBottom()
-                        .Content(
-                            ItemsControl()
-                                .ItemsSource(counters.ToNotifyCollectionChangedSlim())
-                                .ItemTemplate<CounterState>(v => BuildCounterItem(counters, v))
+                    ItemsControl()
+                        .ItemsSource(counters.ToNotifyCollectionChangedSlim())
+                        .ItemTemplate<CounterState>(v => BuildCounterItem(counters, v))
+                        .Template(
+                            ScrollViewer()
+                                .Content(ItemsPresenter())
+                                .VerticalScrollBarVisibilityAuto()
+                                .HorizontalScrollBarVisibilityDisabled()
                         )
+                        .ItemsPanel(VirtualizingStackPanel())
+                        .DockBottom()
                         .Margin(10)
-                        .VerticalScrollBarVisibilityAuto()
-                        .HorizontalScrollBarVisibilityDisabled()
                 );
         });
 
