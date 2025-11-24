@@ -2,7 +2,7 @@ namespace HelloAvaloniaNXUI.Utils;
 
 public static class ItemsControlExtensions
 {
-    public static ItemsControl ItemTemplate<T>(
+    public static ItemsControl ItemTemplateFunc<T>(
         this ItemsControl control,
         Func<T, Control?> render,
         bool supportsRecycling = true
@@ -12,15 +12,21 @@ public static class ItemsControlExtensions
         return control.ItemTemplate(template);
     }
 
-    public static ItemsControl Template(this ItemsControl control, TemplatedControl templatedControl)
+    public static ItemsControl TemplateFunc(this ItemsControl control, TemplatedControl templatedControl)
     {
         var template = new FuncControlTemplate<ItemsControl>((_, _) => templatedControl);
         return control.Template(template);
     }
 
-    public static ItemsControl ItemsPanel(this ItemsControl control, Panel panel)
+    public static ItemsControl ItemsPanelFunc(this ItemsControl control, Panel panel)
     {
-        control.ItemsPanel = new FuncTemplate<Panel?>(() => panel);
-        return control;
+        return control.ItemsPanel(new FuncTemplate<Panel?>(() => panel));
+    }
+
+    public static ItemsControl ItemsSourceObservable<T>(
+        this ItemsControl control,
+        ObservableList<T> itemsSource)
+    {
+        return control.ItemsSource(itemsSource.ToNotifyCollectionChangedSlim());
     }
 }

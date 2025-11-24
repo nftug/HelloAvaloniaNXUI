@@ -9,10 +9,13 @@ public static class CounterListPageView
 
     private static Control BuildCounterItem(ObservableList<CounterState> items, CounterState item)
     {
-        var index = items.IndexOf(item);
-        var itemValue = Observable.EveryValueChanged(items[index], v => v.Value);
-
-        void UpdateItemValue(int value) => items[index] = item with { Value = value };
+        void UpdateItemValue(int value)
+        {
+            var target = items.FirstOrDefault(i => i.Id == item.Id);
+            if (target == null) return;
+            var index = items.IndexOf(target);
+            items[index] = target with { Value = value };
+        }
 
         return StackPanel()
             .OrientationHorizontal()
@@ -24,7 +27,7 @@ public static class CounterListPageView
                     .MinWidth(40)
                     .FontSize(20)
                     .FontWeightBold()
-                    .Content(itemValue.AsSystemObservable().ToBinding()),
+                    .Content(item.Value),
                 Button()
                     .Content("+")
                     .OnClickHandler((_, e) => UpdateItemValue(item.Value + 1))
@@ -45,7 +48,10 @@ public static class CounterListPageView
 
             var countersLength = counters.ObserveCountChanged();
 
-            var countersSum = counters.ObserveCollectionChanged(c => c.Sum(item => item.Value));
+            var countersSum = counters.ObserveChanged()
+                .Select(_ => Unit.Default)
+                .Prepend(Unit.Default)
+                .Select(_ => counters.Sum(c => c.Value));
 
             void HandleClickAdd()
             {
@@ -92,14 +98,14 @@ public static class CounterListPageView
                         ),
                     ItemsControl()
                         .ItemsSource(counters.ToNotifyCollectionChangedSlim())
-                        .ItemTemplate<CounterState>(v => BuildCounterItem(counters, v))
-                        .Template(
+                        .ItemTemplateFunc<CounterState>(v => BuildCounterItem(counters, v))
+                        .TemplateFunc(
                             ScrollViewer()
                                 .Content(ItemsPresenter())
                                 .VerticalScrollBarVisibilityAuto()
                                 .HorizontalScrollBarVisibilityDisabled()
                         )
-                        .ItemsPanel(VirtualizingStackPanel())
+                        .ItemsPanelFunc(VirtualizingStackPanel())
                         .DockBottom()
                         .Margin(10)
                 );

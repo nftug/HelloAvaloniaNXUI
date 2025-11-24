@@ -8,26 +8,6 @@ public static class ObservableExtensions
         return source.DistinctUntilChanged().ToReadOnlyReactiveProperty(initialValue).AddTo(disposables);
     }
 
-    public static Observable<Unit> ObserveCollectionChanged<T>(
-        this IObservableCollection<T> collection)
-    {
-        return Observable.Merge(
-            Observable.EveryValueChanged(collection, c => c.Count).Select(_ => Unit.Default),
-            collection.ObserveReplace().Select(_ => Unit.Default)
-        )
-        .Select(_ => Unit.Default);
-    }
-
-    public static Observable<U> ObserveCollectionChanged<T, U>(
-        this IObservableCollection<T> collection, Func<IObservableCollection<T>, U> selector)
-    {
-        return Observable.Merge(
-            Observable.EveryValueChanged(collection, c => c.Count).Select(_ => Unit.Default),
-            collection.ObserveReplace().Select(_ => Unit.Default)
-        )
-        .Select(_ => selector(collection));
-    }
-
     public static Control ToView<T>(
         this Observable<T> source,
         Func<T, Control?> render,
